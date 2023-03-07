@@ -1,0 +1,33 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <!-- Required meta tags -->
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <!-- Title -->
+        <title>DBSF</title>
+
+        <!-- CSS -->
+        
+        <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    </head>
+    <body>
+       
+        <nav>
+            <h1>nav</h1>
+        </nav>
+        
+
+        <!-- Body -->
+        {% block content %}
+        {% endblock content %}
+
+        <footer>
+            <h1>footer</h1>
+        </footer>
+      
+    </body>
+    
+</html>
