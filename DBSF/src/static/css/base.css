@@ -1,7 +1,7 @@
 body{
     margin:0;
     padding:0;
-    background-color: white;
+    background-color: #cfceca;
     display:grid;
     grid-template-rows: auto 1fr auto;
     height: 100vh;
@@ -9,9 +9,18 @@ body{
 }
 
 nav{
-    background-color: blue;
+    background-color: #465261;
+    display:grid;
+    grid-template-columns: 1fr auto 1fr;
+}
+
+#logo{
+    height: 10vh;
 }
 
 footer{
-    background-color: blue;
+    background-color: #465261;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
