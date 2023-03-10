@@ -1,21 +1,29 @@
 body{
     margin:0;
     padding:0;
-    background-color: #cfceca;
+    background-color: #dfdede;
     display:grid;
     grid-template-rows: auto 1fr auto;
     height: 100vh;
     width: 100vw;
 }
 
+/* NAV SECTION */
 nav{
     background-color: #465261;
     display:grid;
-    grid-template-columns: 1fr auto 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
+}
+
+#logo-container{
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 #logo{
     height: 10vh;
+    align-items: center;
 }
 
 footer{
@@ -25,3 +33,67 @@ footer{
     justify-content: center;
     font-weight: bold;
 }
+
+/* dropdown hamburger */
+.hamburger{
+    margin:0;
+    cursor: pointer;
+  }
+  
+  .bar {
+    width: 2.8vw;
+    height: 0.6vh;
+    background-color: black;
+    border-radius: 15px;
+  }
+  
+  .bar:nth-child(2) {
+    margin: 0.8vh 0;
+  }
+  
+  /* all dropdown menu */
+  #checkbox-menu{
+    display:none;
+  }
+  
+  #dropdown-menu{
+    /* top right bottom left */
+    padding:3vh 0 0 1.5vw;
+  }
+  
+    /* dropdown content (submenu) */
+    #dropdown-content {
+      left:0vw;
+      display:none;
+      position: absolute;
+      /* box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2); */
+      z-index: 1;
+    }
+  
+    #dropdown-content a{
+      text-align: center;
+      background-color: #2e4868;
+      text-decoration: none;
+      color: white;
+      font-size: 1.2rem;
+      width: auto;
+      padding: 1rem 1rem;
+    }
+  
+    #dropdown-content a:hover {
+      background-color: rgba(172, 172, 172, 0.8);
+      width: auto;
+    }
+  
+  /* dropdown when clicked */
+  input:checked ~ #dropdown-content{
+    display: grid;
+    grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
+    height: 100vh;
+    top: 0;
+  }
+
+  input:checked ~ #dropdown-menu{
+    /* top right bottom left */
+    padding:3vh 0 0 5vw;
+  }
