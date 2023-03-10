@@ -14,10 +14,11 @@
         <link rel="stylesheet" href="{% static 'css/base.css' %}">
     </head>
     <body>
-       
-        <nav>
+        <script src="{% static 'js/base.js' %}">
+        </script>
+        <nav id="navbar">
             <div id="dropdown-menu">
-                <input id="checkbox-menu" type="checkbox" name="menu"/>
+                <input id="checkbox-menu" type="checkbox" name="menu" onclick="checkbox()"/>
       
                 <label for="checkbox-menu" class="hamburger">
                     <div class="bar"></div>
@@ -35,13 +36,15 @@
                     <div></div>
                 </div>
             </div>
-            
+
+            <div id="dropdown-space">
+            </div>
+
             <div id="logo-container">
                 <img src="{% static 'images/logo.png' %}" alt="" id="logo">
             </div>
             
             <div>
-                
                 <p id="help-button"><a href="#">HELP</a></p>
             </div>
         </nav>

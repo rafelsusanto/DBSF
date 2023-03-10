@@ -9,10 +9,11 @@ body{
 }
 
 /* NAV SECTION */
-nav{
+#navbar{
     background-color: #465261;
     display:grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: 0.2fr 0.8fr 1fr 1fr;
+    height: 10vh;
 }
 
 #logo-container{
