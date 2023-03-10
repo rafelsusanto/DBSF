@@ -1,3 +1,41 @@
-div{
-    height: 100vh;
+#home-box-pic{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+#home-box-pic div{
+    background-color: aqua;
+    height: 50vh;
+    width: 70vw;
+    margin-top: 2vh;
+}
+
+#target-ip-box{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 3vh;
+}
+
+#target-ip-box label{
+    font-size: 2.5vh;
+}
+
+#target-ip-box input{
+    height: 3vh;
+    width: 20vw;
+}
+
+#target-ip-submit-box{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 3vh;
+}
+
+#target-ip-submit-box input{
+    font-size: 2.5vh;
+    padding: 1vh;
 }
