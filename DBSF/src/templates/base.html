@@ -16,7 +16,26 @@
     <body>
        
         <nav>
-            <h1>nav</h1>
+            <div id="dropdown-menu">
+                <input id="checkbox-menu" type="checkbox" name="menu"/>
+      
+                <label for="checkbox-menu" class="hamburger">
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                </label>
+                
+                <div id="dropdown-content">   
+                    <a href="#">Home</a>
+                    <a href="#">Home</a>
+                    <a href="#">Home</a>
+                    <a href="#">Home</a>
+                </div>
+            </div>
+            
+            <img src="{% static 'images/logo.png' %}" alt="" id="logo">
+            
+            <div></div>
         </nav>
         
 
@@ -25,7 +44,7 @@
         {% endblock content %}
 
         <footer>
-            <h1>footer</h1>
+            <h1>&copyCopyright All rights reserved</h1>
         </footer>
       
     </body>
