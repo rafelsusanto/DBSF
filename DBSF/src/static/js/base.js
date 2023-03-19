@@ -8,6 +8,9 @@ function checkbox(){
 
         // update grid ratio
         document.getElementById("navbar").style.gridTemplateColumns = "0.6fr 0.4fr 1fr 1fr";
+
+        // update grid ratio for body
+        document.getElementById("home-body").style.gridTemplateColumns = "14fr 86fr";
     }else{
         // make logo appear
         document.getElementById("logo").style.display = "flex";
@@ -17,5 +20,8 @@ function checkbox(){
 
         // update grid ratio
         document.getElementById("navbar").style.gridTemplateColumns = "0.2fr 0.8fr 1fr 1fr";
+
+        // update grid ratio for body
+        document.getElementById("home-body").style.gridTemplateColumns = "0fr 1fr";
     }
 }

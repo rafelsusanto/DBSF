@@ -72,10 +72,12 @@ footer{
   #dropdown-menu{
     /* top right bottom left */
     padding:3vh 0 0 1.5vw;
+    
   }
   
     /* dropdown content (submenu) */
     #dropdown-content {
+      width: 14vw;
       left:0vw;
       display:none;
       position: absolute;
