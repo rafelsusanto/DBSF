@@ -4,3 +4,7 @@ from django.shortcuts import render
 def home_screen_view(request):
     # print(request.headers)
     return render(request, "home.html",{})
+
+def result_screen_view(request):
+    # print(request.headers)
+    return render(request, "result.html",{})

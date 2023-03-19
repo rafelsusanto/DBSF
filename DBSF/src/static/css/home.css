@@ -1,15 +1,8 @@
-#home-body{
-    display: grid;
-    grid-template-columns: 0fr 1fr;
-}
-
-
 #home-box-pic{
     display: flex;
     justify-content: center;
     align-items: center;
 }
-
 
 #home-box-pic div{
     background-color: aqua;
