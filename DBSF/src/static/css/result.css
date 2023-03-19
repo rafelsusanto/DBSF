@@ -1,0 +1,15 @@
+#result-title{
+    margin-top: 3vh;
+    text-align: center;
+    font-size: 3vh;
+}
+
+#result-box{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: lightblue;
+    margin: 0 5vw;
+    height: 50vh;
+    border-radius: 2rem;
+}
