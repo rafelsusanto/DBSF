@@ -1,15 +1,15 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    
+{% load static %} 
             <!-- Icons -->
             <div id="home-box-pic">
-                <div>image here</div>
+                <div><img src="{% static 'images/1.jpg' %}" id="home-center-pic"></div>
             </div>
 
             <!-- IP Address Input -->
-            <div>
-                <form action="">
+            <div id="home-scan-btn">
+                <!-- <form action="">
                     <div id="target-ip-box">
                         <label for="targetIP">Target IP Address:</label><br>
                         <input type="text" name="targetIP"><br>
@@ -18,7 +18,9 @@
                         <input type="submit" value="Submit">
                     </div>
                     
-                </form>
+                </form> -->
+
+                <a href="/newscan">Click for New Scan</a>
             </div>
 
 {% endblock content %}

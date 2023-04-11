@@ -5,13 +5,40 @@
 }
 
 #home-box-pic div{
-    background-color: aqua;
+    /* background-color: aqua; */
     height: 50vh;
     width: 70vw;
-    margin-top: 2vh;
+    margin-top: 5vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-#target-ip-box{
+#home-center-pic{
+    height: 50vh;
+}
+
+#home-scan-btn{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#home-scan-btn a{
+    background-color: rgb(25, 76, 143);
+    margin: 3rem;
+    padding: 2rem;
+    font-size: 2rem;
+    text-decoration: none;
+    color: white;
+    border-radius: 30px;
+    opacity: 0.8;
+}
+
+#home-scan-btn a:hover{
+    opacity: 1;
+}
+/* #target-ip-box{
     display: flex;
     align-items: center;
     justify-content: center;
@@ -37,4 +64,4 @@
 #target-ip-submit-box input{
     font-size: 2.5vh;
     padding: 1vh;
-}
+} */

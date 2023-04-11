@@ -8,3 +8,7 @@ def home_screen_view(request):
 def result_screen_view(request):
     # print(request.headers)
     return render(request, "result.html",{})
+
+def newscan_screen_view(request):
+    # print(request.headers)
+    return render(request, "newscan.html",{})   
