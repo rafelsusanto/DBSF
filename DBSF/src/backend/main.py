@@ -3,7 +3,7 @@ import subprocess
 import sqlmap
 
 
-def testprint:
+def testprint():
     print("hello world")
 
 
