@@ -20,8 +20,6 @@ def newscan(request):
         
     return render(request, "newscan.html",{})   
 
-    
-
 def scanlist_screen_view(request):
     # print(request.headers)
     return render(request, "scanlist.html",{})   

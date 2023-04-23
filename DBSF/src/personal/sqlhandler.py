@@ -6,9 +6,6 @@ import sys
 def runsqlmap(command):
     subprocess.run(command, shell=True)
 
-#def testprint():
-    #print("hello world")
+#runstring = "sqlmap -h"
 
-runstring = "sqlmap -h"
-
-runsqlmap(runstring)
+#runsqlmap(runstring)
