@@ -1,6 +1,5 @@
 from django.shortcuts import render
-from django.http import HttpResponse
-
+from .forms import ScanForm
 
 # Create your views here.
 def home_screen_view(request):
@@ -9,12 +8,20 @@ def home_screen_view(request):
 
 def result_screen_view(request):
     # print(request.headers)
+    
     return render(request, "result.html",{})
 
-def newscan_screen_view(request):
+def newscan(request):
     # print(request.headers)
+    if request.method == "POST":
+        form = ScanForm(request.POST)
+        if form.is_valid():
+            form.save()
+        
     return render(request, "newscan.html",{})   
+
+    
 
 def scanlist_screen_view(request):
     # print(request.headers)
-    return render(request, "scanlist.html",{})
+    return render(request, "scanlist.html",{})   
