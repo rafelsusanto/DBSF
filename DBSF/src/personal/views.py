@@ -1,5 +1,8 @@
 from django.shortcuts import render
 from .forms import ScanForm
+from .odathandler import *
+from .nmaphandler import *
+from .sqlhandler import *
 
 # Create your views here.
 def home_screen_view(request):
