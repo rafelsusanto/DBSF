@@ -17,7 +17,8 @@ def result_screen_view(request):
 def newscan(request):
     # print(request.headers)
     if request.method == "POST":
-        form = ScanForm(request.POST)
+        form = ScanForm(request.POST, request.FILES)
+        # print(form)
         if form.is_valid():
             form.save()
         

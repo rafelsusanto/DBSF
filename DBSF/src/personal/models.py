@@ -4,7 +4,7 @@ from django.db import models
 class Scan(models.Model):
     Name = models.CharField(max_length=50)
     IPAddress = models.CharField(max_length=20)
-    PacketRequest = models.TextField(null=True)
+    PacketRequest = models.FileField(null=True)
 
 class ScanResult(models.Model):
     ScanID = models.ForeignKey(Scan, on_delete=models.CASCADE)

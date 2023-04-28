@@ -4,12 +4,12 @@
 {% load static %} 
             <p id="new-scan-title">New Scan</p>
             <div id="new-scan-box-form">
-                <form action="/newscan" method="POST">
+                <form action="/newscan" method="POST" enctype="multipart/form-data">
                     {%csrf_token%}
                     <div id="new-scan-form-input">
                         <p>Name:</p><input type="text" id="new-scan-input" name="Name">
                         <p>Target IP:</p><input type="text" id="new-scan-input" name="IPAddress">
-                        <p>Packet Request:</p><input type="text" id="new-scan-input" name="PacketRequest">
+                        <p>Packet Request:</p><input type="file" id="new-scan-input" name="PacketRequest">
                         <div><button type="submit">Start Scan</button></div>
                     </div>
                 </form>
