@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from .forms import ScanForm
+from .models import *
 from .odathandler import *
 from .nmaphandler import *
 from .sqlhandler import *
@@ -19,8 +20,12 @@ def newscan(request):
     if request.method == "POST":
         form = ScanForm(request.POST, request.FILES)
         # print(form)
+        # print(request.FILES)
+        test_ls()
         if form.is_valid():
             form.save()
+            l = Scan.objects.all().last()
+            run_nmap(str(l.IPAddress))
         
     return render(request, "newscan.html",{})   
 
