@@ -24,8 +24,7 @@ elif user_input == "2":
     commands = "sqlmap -h"
     runsqlmap(commands)
 elif user_input == "3":
-    commands = ""
+    commands = "odat.py -h"
     run_odat(commands)
 else:
     print("Please make sure you entered the correct number according to the tools")
-    
