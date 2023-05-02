@@ -21,6 +21,7 @@ from personal.views import(
     result_screen_view,
     newscan,
     scanlist_screen_view,
+    delete_scan_list,
 )
 
 urlpatterns = [
@@ -29,4 +30,5 @@ urlpatterns = [
     path('result', result_screen_view),
     path('newscan', newscan),
     path('scanlist', scanlist_screen_view),
+    path('delete_scan_list/<scan_id>', delete_scan_list)
 ]

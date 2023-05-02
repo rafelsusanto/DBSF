@@ -1,0 +1,54 @@
+#scan-list-title{
+    font-size: 2rem;
+    padding-left: 10vw;
+    text-decoration-line: underline;  
+}
+
+#scan-list-box{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-style: double;
+    margin: 0 10vw;
+    border-radius: 10px;
+    margin-bottom: 1vh;
+}
+
+#scan-list-box-item{
+    width: 74vw;
+    height: auto;
+    display: grid;
+    grid-template-columns: 10fr auto auto;
+    align-items: center;
+    padding: 0 3vw;
+}
+
+#scan-list-box-item-2{
+    background-color: rgb(16, 98, 153);
+    height: 5vh;
+    width: 5vh;
+    margin: 1vh;
+    border-radius: 7px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#scan-list-box-item-3{
+    background-color: rgb(155, 21, 21);
+    height: 5vh;
+    width: 5vh;
+    margin: 1vh;
+    border-radius: 7px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#scan-list-box-item-2 img{ 
+    height: 2.5vh;
+}
+
+#scan-list-box-item-3 img{ 
+    height: 2.5vh;
+}

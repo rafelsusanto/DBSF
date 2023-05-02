@@ -2,8 +2,20 @@
 
 {% block content %}
 {% load static %} 
-            <p id="new-scan-title">Scan List</p>
+            <!-- alert if successfully added -->
+            {% if msg == "Saved" %} <script>alert("Successfully added a new scan!")</script> 
+            {% elif msg == "Deleted" %} <script>alert("Successfully deleted a scan!")</script> 
+            {% endif %}
+
+
+            <p id="scan-list-title">Scan List</p>
+            {% for l in scan_list %}
             <div id="scan-list-box">
-                
+                <div id="scan-list-box-item">
+                        <div id="scan-list-box-item-1">{{l.Name}} ({{l.IPAddress}})</div>
+                        <a href="" id="scan-list-box-item-2"><img src="{% static 'images/view.svg' %}" alt="view"></a> 
+                        <a href="delete_scan_list/{{l.id}}" id="scan-list-box-item-3"><img src="{% static 'images/trash-can-solid.svg' %}" alt="trash"></a>
+                </div>
             </div>
+            {% endfor %}
 {% endblock content %}
