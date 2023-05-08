@@ -19,8 +19,8 @@ def newscan(request):
     # print(request.headers)
     if request.method == "POST":
         form = ScanForm(request.POST, request.FILES)
-        # print(form)
-        # print(request.FILES)
+        print(form)
+        print(request.FILES)
         # test_ls()
         if form.is_valid():
             form.save()
@@ -30,7 +30,6 @@ def newscan(request):
             # redirect to scanlist
             scan_list = Scan.objects.all()
             return render(request, "scanlist.html",{'scan_list':scan_list,'msg' : "Saved"})
-        
     return render(request, "newscan.html")   
 
 def scanlist_screen_view(request, msg="nothing"):
