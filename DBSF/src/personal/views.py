@@ -19,9 +19,7 @@ def newscan(request):
     # print(request.headers)
     if request.method == "POST":
         form = ScanForm(request.POST, request.FILES)
-        print(form)
-        print(request.FILES)
-        # test_ls()
+        
         if form.is_valid():
             form.save()
             l = Scan.objects.all().last()

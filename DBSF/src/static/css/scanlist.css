@@ -18,31 +18,38 @@
     width: 74vw;
     height: auto;
     display: grid;
-    grid-template-columns: 10fr auto auto;
+    grid-template-columns: 10fr auto auto auto;
     align-items: center;
     padding: 0 3vw;
 }
 
-#scan-list-box-item-2{
-    background-color: rgb(16, 98, 153);
-    height: 5vh;
-    width: 5vh;
-    margin: 1vh;
+.scan-list-sizing{
     border-radius: 7px;
+    margin: 1vh;
+    height: 5vh;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
+#scan-list-box-item-1-1{
+    background-color: rgb(0, 228, 11);
+    width: 14vh;
+}
+
+#scan-list-box-item-1-2{
+    background-color: rgb(240, 240, 0);
+    width: 14vh;
+}
+
+#scan-list-box-item-2{
+    background-color: rgb(16, 98, 153);
+    width: 5vh;
+}
+
 #scan-list-box-item-3{
     background-color: rgb(155, 21, 21);
-    height: 5vh;
     width: 5vh;
-    margin: 1vh;
-    border-radius: 7px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
 }
 
 #scan-list-box-item-2 img{ 

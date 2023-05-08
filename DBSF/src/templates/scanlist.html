@@ -12,9 +12,18 @@
             {% for l in scan_list %}
             <div id="scan-list-box">
                 <div id="scan-list-box-item">
-                        <div id="scan-list-box-item-1">{{l.Name}} ({{l.IPAddress}})</div>
-                        <a href="" id="scan-list-box-item-2"><img src="{% static 'images/view.svg' %}" alt="view"></a> 
-                        <a href="delete_scan_list/{{l.id}}" id="scan-list-box-item-3"><img src="{% static 'images/trash-can-solid.svg' %}" alt="trash"></a>
+                        <div>{{l.Name}} ({{l.IPAddress}})</div>
+
+                        <!-- status color -->
+                        {% if l.Status == "On Going" %}
+                        <div class="scan-list-sizing" id="scan-list-box-item-1-2">On Going</div>
+                        {% else %}
+                        <div class="scan-list-sizing" id="scan-list-box-item-1-1">Done</div>
+                        {% endif %}
+
+                        
+                        <a href="" class="scan-list-sizing" id="scan-list-box-item-2"><img src="{% static 'images/view.svg' %}" alt="view"></a> 
+                        <a href="delete_scan_list/{{l.id}}" class="scan-list-sizing" id="scan-list-box-item-3"><img src="{% static 'images/trash-can-solid.svg' %}" alt="trash"></a>
                 </div>
             </div>
             {% endfor %}
