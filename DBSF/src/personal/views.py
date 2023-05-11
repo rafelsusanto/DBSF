@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .forms import ScanForm
+from .forms import *
 from .models import *
 from .odathandler import *
 from .nmaphandler import *
@@ -23,7 +23,10 @@ def newscan(request):
         if form.is_valid():
             form.save()
             l = Scan.objects.all().last()
-            run_nmap(str(l.IPAddress))
+            # run_nmap(str(l.IPAddress))
+            # run script here
+            # run(ip)
+            run_thread(str(l.IPAddress),l.id)
 
             # redirect to scanlist
             scan_list = Scan.objects.all()
@@ -35,8 +38,12 @@ def scanlist_screen_view(request, msg="nothing"):
     return render(request, "scanlist.html",{'scan_list':scan_list,'msg' : msg})   
 
 def delete_scan_list(request, scan_id):
-    print(scan_id)
     DELETE = Scan.objects.get(pk=scan_id)
     DELETE.delete()
 
     return redirect(scanlist_screen_view)
+
+def view_scan_result(request, scan_id):
+    scan_list = ScanResult.objects.filter(ScanID=scan_id)
+
+    return render(request, "scanresult.html",{'scan_list':scan_list})  
