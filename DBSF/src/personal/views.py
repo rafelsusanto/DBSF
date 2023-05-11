@@ -44,6 +44,7 @@ def delete_scan_list(request, scan_id):
     return redirect(scanlist_screen_view)
 
 def view_scan_result(request, scan_id):
+    # print("test")
     scan_list = ScanResult.objects.filter(ScanID=scan_id)
 
     return render(request, "scanresult.html",{'scan_list':scan_list})  
