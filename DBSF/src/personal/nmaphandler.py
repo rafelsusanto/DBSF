@@ -31,5 +31,3 @@ def start_nmap():
 #runstring = "nmap -h"
 
 #run_nmap(runstring)
-
-#nmap mau pake subprocess or pake library python-nmap?
