@@ -10,4 +10,4 @@ class Scan(models.Model):
 class ScanResult(models.Model):
     ScanID = models.ForeignKey(Scan, on_delete=models.CASCADE)
     ScanType = models.CharField(max_length=3)
-    FilePath = models.CharField(max_length=255)
+    Description = models.TextField(null=True)

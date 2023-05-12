@@ -3,31 +3,32 @@ import subprocess
 import sqlmap
 import sys
 import threading
+from .models import *
+from .forms import *
 
-def run_thread():
-    proc = run_nmap()
-    proc.save()
-    thread = threading.thread(target=start_nmap,args=[proc.id])
+def run_thread(ip,db_id):
+    thread = threading.Thread(target=run_nmap,args=(ip,db_id,))
     thread.setDaemon(True)
     thread.start()
-    #set a return value
 
-def run_nmap(ip):
+def run_nmap(ip,db_id):
     CMD = "nmap -p 80 "+ ip
     op = subprocess.run(CMD, shell=True, stdout=subprocess.PIPE)
-    print(op.stdout)
+    hasil = op.stdout
+    hasil = hasil.decode('UTF-8')
+
+    form = ScanResultForm({'ScanID': db_id, 'ScanType' : "1", 'Description': hasil})
+    form.save()
+
+    UPDATE = Scan.objects.get(pk=db_id)
+    UPDATE.Status = "Done"
+    UPDATE.save()
+
+
+
+    print(hasil)
 
 def test_ls():
     cmd = "ls"
     op = subprocess.run(cmd, shell=True, stdout=subprocess.PIPE)
     print(op.stdout)
-
-def start_nmap():
-    #get process id from db
-
-    #save result
-    #set done flag as true
-    #save
-#runstring = "nmap -h"
-
-#run_nmap(runstring)
