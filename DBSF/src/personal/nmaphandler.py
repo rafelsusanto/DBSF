@@ -1,6 +1,5 @@
 import os
 import subprocess
-import sqlmap
 import sys
 import threading
 from .models import *

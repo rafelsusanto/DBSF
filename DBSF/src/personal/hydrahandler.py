@@ -5,13 +5,15 @@ import threading
 from .models import *
 from .forms import *
 
-def run_thread(ip,db_id):
+#port ambil dari nmap, harus bikin formatting buat output
+
+def run_thread(ip,port,db_id):
     thread = threading.Thread(target=run_nmap,args=(ip,db_id,))
     thread.setDaemon(True)
     thread.start()
 
-def run_odat(ip,db_id):
-    CMD = "odat -h " #ganti ke command apa yg mau di run
+def run_hydra(ip,port,db_id):
+    CMD = "hydra -L "+ ip + " " + "3306"
     op = subprocess.run(CMD, shell=True, stdout=subprocess.PIPE)
     hasil = op.stdout
     hasil = hasil.decode('UTF-8')
