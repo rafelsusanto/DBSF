@@ -17,6 +17,8 @@
                         <!-- status color -->
                         {% if l.Status == "On Going" %}
                         <div class="scan-list-sizing" id="scan-list-box-item-1-2">On Going</div>
+                        {% elif l.Status == "Failed" %}
+                        <div class="scan-list-sizing" id="scan-list-box-item-1-3">Failed</div>
                         {% else %}
                         <div class="scan-list-sizing" id="scan-list-box-item-1-1">Done</div>
                         {% endif %}
