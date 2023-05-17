@@ -1,11 +1,24 @@
 import os
 import subprocess
-import sqlmap
 import sys
+import threading
+from .models import *
+from .forms import *
 
-def runsqlmap(command):
-    subprocess.run(command, shell=True)
+def run_thread(ip,db_id):
+    thread = threading.Thread(target=run_nmap,args=(ip,db_id,))
+    thread.setDaemon(True)
+    thread.start()
 
-#runstring = "sqlmap -h"
+def run_sqlmap(ip,db_id):
+    CMD = "sqlmap -h " #ganti ke command apa yg mau di run
+    op = subprocess.run(CMD, shell=True, stdout=subprocess.PIPE)
+    hasil = op.stdout
+    hasil = hasil.decode('UTF-8')
 
-#runsqlmap(runstring)
+    #form = ScanResultForm({'ScanID': db_id, 'ScanType' : "1", 'Description': hasil})
+    #form.save()
+
+    #UPDATE = Scan.objects.get(pk=db_id)
+    #UPDATE.Status = "Done"
+    #UPDATE.save()
