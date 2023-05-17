@@ -26,7 +26,7 @@ def newscan(request):
             # run_nmap(str(l.IPAddress))
             # run script here
             # run(ip)
-            run_thread(str(l.IPAddress),l.id)
+            run_thread_nmap(str(l.IPAddress),l.id)
 
             # redirect to scanlist
             scan_list = Scan.objects.all()
