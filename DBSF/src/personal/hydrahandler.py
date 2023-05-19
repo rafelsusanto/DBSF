@@ -1,6 +1,7 @@
 import os
 import subprocess
 import sys
+import time
 import threading
 from django.conf.urls.static import static
 from .models import *
@@ -18,8 +19,7 @@ def run_thread_hydra(ip, db_id, db_port, db_type):
     thread.start()
 
 def run_hydra(ip,db_id, db_port, db_type):
-    STATICFILES_DIRS = [os.path.join(BASE_DIR,'static')]
-    password_path = STATICFILES_DIRS[0] + "/files/password.txt"
+    password_path = str(BASE_DIR) + "/static/files/password.txt"
     print(password_path)
 
     # hydra -l dvwa -P ./password 127.0.0.1 mysql
@@ -29,15 +29,5 @@ def run_hydra(ip,db_id, db_port, db_type):
     hasil = hasil.decode('UTF-8')
     
     form = ScanResultForm({'ScanID': db_id, 'ScanType' : "2", 'Description': hasil})
-    form.save()
-
-
-    
-    print(STATICFILES_DIRS)
-
-    #form = ScanResultForm({'ScanID': db_id, 'ScanType' : "1", 'Description': hasil})
-    #form.save()
-
-    #UPDATE = Scan.objects.get(pk=db_id)
-    #UPDATE.Status = "Done"
-    #UPDATE.save()
+    if form.is_valid():
+        form.save()

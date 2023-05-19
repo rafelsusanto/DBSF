@@ -4,12 +4,14 @@
 
     <p id="result-title">RESULT TITLE</p>
 
+    {% for l in scan_list %}
     <div id="result-box">
         <p>RESULT</p>
-        {% for l in scan_list %}
-            {{l.Description}}
-        {% endfor %}
+        {{l.Description}}
     </div>
+    {% endfor %}
+
+    
 
             
 

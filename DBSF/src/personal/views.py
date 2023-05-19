@@ -1,9 +1,7 @@
 from django.shortcuts import render, redirect
 from .forms import *
 from .models import *
-from .odathandler import *
-from .nmaphandler import *
-from .sqlhandler import *
+from .fullscan import *
 
 # Create your views here.
 def home_screen_view(request):
@@ -26,7 +24,7 @@ def newscan(request):
             # run_nmap(str(l.IPAddress))
             # run script here
             # run(ip)
-            run_thread_nmap(str(l.IPAddress),l.id)
+            run_fullscan(str(l.IPAddress),l.id)
 
             # redirect to scanlist
             scan_list = Scan.objects.all()
