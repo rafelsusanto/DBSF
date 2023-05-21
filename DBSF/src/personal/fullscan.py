@@ -14,6 +14,8 @@ ODAT = 0
 CTR_nmap = 0
 CTR_hydra = 0
 CTR_hydra_current = 0
+CTR_tns = 0
+CTR_tns_current = 0
 CTR_sqlmap = 0
 
 def run_fullscan(ip,db_id):
@@ -43,6 +45,25 @@ def run_hydra(ip,db_id, db_port, db_type):
     global CTR_hydra_current
     CTR_hydra_current+=1
 
+def run_thread_tns(ip, db_id, db_port):
+    thread = threading.Thread(target=run_tns,args=(ip,db_id,db_port,   ))
+    thread.setDaemon(True)
+    thread.start()
+
+def run_tns(ip, db_id, db_port):
+    CMD = "nmap --script=oracle-tns-poison.nse -p "+db_port+" "+ip
+    op = subprocess.run(CMD, shell=True, stdout=subprocess.PIPE)
+    hasil = op.stdout
+    hasil = hasil.decode('UTF-8')
+
+    form = ScanResultForm({'ScanID': db_id, 'ScanType' : "3", 'Description': hasil})
+    if form.is_valid():
+        form.save()
+
+    global CTR_tns_current
+    CTR_tns_current+=1
+
+
 def run_nmap(ip,db_id):
     CMD = "nmap -sC -sV "+ ip
     # CMD = "nmap -p 80 "+ ip
@@ -57,6 +78,7 @@ def run_nmap(ip,db_id):
         # check if port is mysql / oracle 
         result = ""
         global CTR_hydra
+        global CTR_tns
         for c in container:
             if c.find('tcp open  mysql')!=-1:
                 result += c
@@ -69,7 +91,7 @@ def run_nmap(ip,db_id):
 
                 run_thread_hydra(ip, db_id, db_port[0],"mysql")
 
-            elif c.find('oracle')!=-1:
+            elif c.find('tcp open  oracle')!=-1:
                 result += c
                 result += '\n' 
                 ODAT = 1
@@ -79,8 +101,12 @@ def run_nmap(ip,db_id):
                 CTR_hydra+=1
 
                 run_thread_hydra(ip, db_id, db_port[0],"oracle")
+
+                # jalanin threading buat scan tns poisoning
+                CTR_tns+=1
+                run_thread_tns(ip, db_id, db_port[0])
         
-        print(result)
+        # print(result)
         form = ScanResultForm({'ScanID': db_id, 'ScanType' : "1", 'Description': hasil})
         if form.is_valid():
             form.save()
@@ -94,6 +120,7 @@ def run_nmap(ip,db_id):
         form = ScanResultForm({'ScanID': db_id, 'ScanType' : "9", 'Description': "Fail to run nmap!"})
         if form.is_valid():
             form.save()
+
     global CTR_nmap
     CTR_nmap=1
     
@@ -130,15 +157,12 @@ def run_script(ip,db_id):
     else:
         global CTR_sqlmap
         CTR_sqlmap=1
-        
-
-    # run odat
 
 
     # if statement cek kalo status nya fail atau ongoing
     i=0
     while i<=10:
-        if CTR_nmap==1 and CTR_sqlmap==1 and CTR_hydra==CTR_hydra_current:
+        if CTR_nmap==1 and CTR_sqlmap==1 and CTR_hydra==CTR_hydra_current and CTR_tns==CTR_tns_current:
             i=11
             UPDATE = Scan.objects.get(pk=db_id)
             UPDATE.Status = "Done"
