@@ -64,8 +64,8 @@ def run_tns(ip, db_id, db_port):
     CTR_tns_current+=1
 
 
-def run_nmap(ip,db_id):
-    CMD = "nmap -sC -sV "+ ip
+def run_nmap(ip,db_id, cmd):
+    CMD = cmd + ip
     # CMD = "nmap -p 80 "+ ip
     op = subprocess.run(CMD, shell=True, stdout=subprocess.PIPE)
     hasil = op.stdout
@@ -110,8 +110,8 @@ def run_nmap(ip,db_id):
         form = ScanResultForm({'ScanID': db_id, 'ScanType' : "1", 'Description': hasil})
         if form.is_valid():
             form.save()
-
-
+    elif hasil.find("try -Pn"):
+        run_nmap(ip,db_id, "nmap -sC -sV -Pn ")
     else:
         UPDATE = Scan.objects.get(pk=db_id)
         UPDATE.Status = "Failed"
@@ -146,7 +146,7 @@ def run_sqlmap(packet_path,db_id):
 
 def run_script(ip,db_id):
     # run nmap
-    run_nmap(ip,db_id)
+    run_nmap(ip,db_id, "nmap -sC -sV ")
 
     # run sqlmap
     TARGET = Scan.objects.get(pk=db_id)
