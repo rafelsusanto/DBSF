@@ -11,6 +11,8 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 ODAT = 0
+CTR=0
+CTR_current=0
 CTR_nmap = 0
 CTR_hydra = 0
 CTR_hydra_current = 0
@@ -25,33 +27,56 @@ def run_fullscan(ip,db_id):
     # thread.join()
     
 def run_thread_hydra(ip, db_id, db_port, db_type):
+    global CTR_hydra
+    CTR_hydra+=1
     thread = threading.Thread(target=run_hydra,args=(ip,db_id,db_port, db_type,  ))
     thread.setDaemon(True)
     thread.start()
 
 def run_hydra(ip,db_id, db_port, db_type):
     password_path = str(BASE_DIR) + "/static/files/password.txt"
+    username_path = str(BASE_DIR) + "/static/files/username.txt"
+    sid_list_path = str(BASE_DIR) + "/static/files/sid.txt"
     print(password_path)
 
     # hydra -l dvwa -P ./password 127.0.0.1 mysql
-    CMD = "hydra -l dvwa -P "+password_path+" " + ip + " " + db_type + " -s " + db_port
+    if db_type=="oracle":
+        CMD = "hydra -L " + sid_list_path + " " + ip + " oracle-sid -s "+ db_port
+    else:
+        CMD = "hydra -L "+ username_path + " -P "+password_path+" " + ip + " " + db_type + " -s " + db_port
+    print(CMD)
     op = subprocess.run(CMD, shell=True, stdout=subprocess.PIPE)
     hasil = op.stdout
     hasil = hasil.decode('UTF-8')
     
     form = ScanResultForm({'ScanID': db_id, 'ScanType' : "2", 'Description': hasil})
+
+    #if oracle cek kalo sid ketemu
+    if db_type=="oracle":
+        # cek sid ketemu ga
+        container = hasil.split('\n')
+        for c in container:
+            if c.find("login: ")!=-1:
+                sid = c.split('login: ')[1]
+                run_thread_tns(ip, db_id, db_port, sid)
+                
+        
+
     if form.is_valid():
         form.save()
     global CTR_hydra_current
     CTR_hydra_current+=1
 
-def run_thread_tns(ip, db_id, db_port):
-    thread = threading.Thread(target=run_tns,args=(ip,db_id,db_port,   ))
+def run_thread_tns(ip, db_id, db_port,sid):
+    global CTR
+    CTR+=1
+    thread = threading.Thread(target=run_tns,args=(ip,db_id,db_port,sid,   ))
     thread.setDaemon(True)
     thread.start()
 
-def run_tns(ip, db_id, db_port):
-    CMD = "nmap --script=oracle-tns-poison.nse -p "+db_port+" "+ip
+def run_tns(ip, db_id, db_port,sid):
+    odat_path = str(BASE_DIR) + "/personal/backend/odat/odat.py"
+    CMD = "python3 "+odat_path+" tnspoison -s "+ip+" -p "+db_port+" -d "+sid+" --test-module"
     op = subprocess.run(CMD, shell=True, stdout=subprocess.PIPE)
     hasil = op.stdout
     hasil = hasil.decode('UTF-8')
@@ -60,8 +85,29 @@ def run_tns(ip, db_id, db_port):
     if form.is_valid():
         form.save()
 
-    global CTR_tns_current
-    CTR_tns_current+=1
+    global CTR_current
+    CTR_current+=1
+
+def run_thread_va(ip, db_id, db_port):
+    global CTR
+    CTR+=1
+    thread = threading.Thread(target=run_va,args=(ip,db_id,db_port,   ))
+    thread.setDaemon(True)
+    thread.start()
+
+def run_va(ip, db_id, db_port):
+    CMD = "nmap -p "+db_port+" -sV --script vulners "+ip
+    op = subprocess.run(CMD, shell=True, stdout=subprocess.PIPE)
+    hasil = op.stdout
+    hasil = hasil.decode('UTF-8')
+
+    form = ScanResultForm({'ScanID': db_id, 'ScanType' : "5", 'Description': hasil})
+    if form.is_valid():
+        form.save()
+
+    global CTR_current
+    CTR_current+=1
+    
 
 
 def run_nmap(ip,db_id, cmd):
@@ -77,8 +123,7 @@ def run_nmap(ip,db_id, cmd):
         db_type = 0
         # check if port is mysql / oracle 
         result = ""
-        global CTR_hydra
-        global CTR_tns
+        
         for c in container:
             if c.find('tcp open  mysql')!=-1:
                 result += c
@@ -86,26 +131,18 @@ def run_nmap(ip,db_id, cmd):
 
                 db_port = c.split('/')
 
-                # jalanin threading buat hydra scanning
-                CTR_hydra+=1
-
+                # jalanin threading buat scanning
                 run_thread_hydra(ip, db_id, db_port[0],"mysql")
-
+                run_thread_va(ip,db_id,db_port[0])
             elif c.find('tcp open  oracle')!=-1:
                 result += c
                 result += '\n' 
                 ODAT = 1
                 db_port = c.split('/')
                 
-                # jalanin threading buat hydra scanning
-                CTR_hydra+=1
-
+                # jalanin threading buat scanning
                 run_thread_hydra(ip, db_id, db_port[0],"oracle")
-
-                # jalanin threading buat scan tns poisoning
-                CTR_tns+=1
-                run_thread_tns(ip, db_id, db_port[0])
-        
+                run_thread_va(ip,db_id,db_port[0])
         # print(result)
         form = ScanResultForm({'ScanID': db_id, 'ScanType' : "1", 'Description': hasil})
         if form.is_valid():
@@ -147,6 +184,7 @@ def run_sqlmap(packet_path,db_id):
 def run_script(ip,db_id):
     # run nmap
     run_nmap(ip,db_id, "nmap -sC -sV ")
+    # run_nmap(ip,db_id, "nmap -p 1521 ")
 
     # run sqlmap
     TARGET = Scan.objects.get(pk=db_id)
@@ -162,7 +200,7 @@ def run_script(ip,db_id):
     # if statement cek kalo status nya fail atau ongoing
     i=0
     while i<=10:
-        if CTR_nmap==1 and CTR_sqlmap==1 and CTR_hydra==CTR_hydra_current and CTR_tns==CTR_tns_current:
+        if CTR_nmap==1 and CTR_sqlmap==1 and CTR_hydra==CTR_hydra_current and CTR==CTR_current:
             i=11
             UPDATE = Scan.objects.get(pk=db_id)
             UPDATE.Status = "Done"
