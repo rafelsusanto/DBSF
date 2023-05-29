@@ -9,24 +9,40 @@
 
 
             <p id="scan-list-title">Scan List</p>
-            {% for l in scan_list %}
-            <div id="scan-list-box">
-                <div id="scan-list-box-item">
-                        <div>{{l.Name}} ({{l.IPAddress}})</div>
-
-                        <!-- status color -->
-                        {% if l.Status == "On Going" %}
-                        <div class="scan-list-sizing" id="scan-list-box-item-1-2">On Going</div>
-                        {% elif l.Status == "Failed" %}
-                        <div class="scan-list-sizing" id="scan-list-box-item-1-3">Failed</div>
-                        {% else %}
-                        <div class="scan-list-sizing" id="scan-list-box-item-1-1">Done</div>
-                        {% endif %}
-
-                        
-                        <a href="view_scan_result/{{l.id}}" class="scan-list-sizing" id="scan-list-box-item-2"><img src="{% static 'images/view.svg' %}" alt="view"></a> 
-                        <a href="delete_scan_list/{{l.id}}" class="scan-list-sizing" id="scan-list-box-item-3"><img src="{% static 'images/trash-can-solid.svg' %}" alt="trash"></a>
-                </div>
+            <div id="scan-list-table-div">
+                <table id="scan-list-table">
+                    <thead>
+                        <tr>
+                            <td >Name</td>
+                            <td style="width: 22%;">IP Address / URL</td>
+                            <td style="width: 25%;">Started At</td>
+                            <td style="text-align: center; width: 11%;">Status</td>
+                            <td style="text-align: center; width: 10%;">Activities</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for l in scan_list %}
+                        <tr>
+                            <td>{{l.Name}}</td>
+                            <td>{{l.IPAddress}}</td>
+                            <td>{{l.Created_at}}</td>
+                            <td class="scan-status" >
+                                <!-- status color -->
+                                {% if l.Status == "On Going" %}
+                                <div class="scan-list-sizing" id="scan-list-box-item-1-2">On Going</div>
+                                {% elif l.Status == "Failed" %}
+                                <div class="scan-list-sizing" id="scan-list-box-item-1-3">Failed</div>
+                                {% else %}
+                                <div class="scan-list-sizing" id="scan-list-box-item-1-1">Done</div>
+                                {% endif %}
+                            </td>
+                            <td class="scan-activities">
+                                <a href="view_scan_result/{{l.id}}" class="scan-list-sizing" id="scan-list-box-item-2"><img src="{% static 'images/view.svg' %}" alt="view"></a> 
+                                <a href="delete_scan_list/{{l.id}}" class="scan-list-sizing" id="scan-list-box-item-3"><img src="{% static 'images/trash-can-solid.svg' %}" alt="trash"></a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
-            {% endfor %}
 {% endblock content %}
