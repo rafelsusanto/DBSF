@@ -1,15 +1,19 @@
 {% extends 'base.html' %}
 
 {% block content %}
-
-    <p id="result-title">RESULT TITLE</p>
-
-    {% for l in scan_list %}
-    <div id="result-box">
-        <p>RESULT</p>
-        {{l.Description}}
-    </div>
-    {% endfor %}
+    {% if failCtr == "Failed" %}
+        <!-- tampilin fail ui -->
+        <p style="display: flex;align-items: center;justify-content: center;color: red; font-size: 2rem;">Failed to scan the target, please create a new scan to retry.</p>
+    {% else %}
+        <!-- tampilin data -->
+        {% for l in scan_list %}
+        <div id="result-box">
+            <p>RESULT</p>
+            {{l.Description}}
+        </div>
+        {% endfor %}
+    {% endif %}
+    
 
     
 

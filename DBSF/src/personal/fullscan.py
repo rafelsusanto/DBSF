@@ -118,7 +118,7 @@ def run_nmap(ip,db_id, cmd):
     hasil = hasil.decode('UTF-8')
 
     # Checking if host is up
-    if hasil.find("Host is up"):
+    if hasil.find("Host is up")!=-1:
         container = hasil.split('\n')
         db_type = 0
         # check if port is mysql / oracle 
@@ -147,16 +147,17 @@ def run_nmap(ip,db_id, cmd):
         form = ScanResultForm({'ScanID': db_id, 'ScanType' : "1", 'Description': hasil})
         if form.is_valid():
             form.save()
-    elif hasil.find("try -Pn"):
+    elif hasil.find("try -Pn")!=-1:
         run_nmap(ip,db_id, "nmap -sC -sV -Pn ")
     else:
+        print("berhasil ke else")
         UPDATE = Scan.objects.get(pk=db_id)
         UPDATE.Status = "Failed"
         UPDATE.save()
 
-        form = ScanResultForm({'ScanID': db_id, 'ScanType' : "9", 'Description': "Fail to run nmap!"})
-        if form.is_valid():
-            form.save()
+        # form = ScanResultForm({'ScanID': db_id, 'ScanType' : "9", 'Description': "Fail to run nmap!"})
+        # if form.is_valid():
+        #     form.save()
 
     global CTR_nmap
     CTR_nmap=1
@@ -183,7 +184,7 @@ def run_sqlmap(packet_path,db_id):
 
 def run_script(ip,db_id):
     # run nmap
-    run_nmap(ip,db_id, "nmap -sC -sV ")
+    run_nmap(ip,db_id, "nmap -sV ")
     # run_nmap(ip,db_id, "nmap -p 1521 ")
 
     # run sqlmap
@@ -201,6 +202,8 @@ def run_script(ip,db_id):
     i=0
     while i<=10:
         if CTR_nmap==1 and CTR_sqlmap==1 and CTR_hydra==CTR_hydra_current and CTR==CTR_current:
+            if TARGET.Status=="Failed":
+                break
             i=11
             UPDATE = Scan.objects.get(pk=db_id)
             UPDATE.Status = "Done"

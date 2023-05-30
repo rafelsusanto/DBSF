@@ -44,5 +44,8 @@ def delete_scan_list(request, scan_id):
 def view_scan_result(request, scan_id):
     # print("test")
     scan_list = ScanResult.objects.filter(ScanID=scan_id)
-
-    return render(request, "scanresult.html",{'scan_list':scan_list})  
+    # filter output user sini
+    failChecker = Scan.objects.get(pk=scan_id)
+    if failChecker.Status=="Failed":
+        return render(request, "scanresult.html",{'failCtr':"Failed"})  
+    return render(request, "scanresult.html",{'failCtr':"Not Failed",'scan_list':scan_list})  
