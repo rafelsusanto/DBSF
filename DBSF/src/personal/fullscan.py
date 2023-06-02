@@ -143,12 +143,15 @@ def run_nmap(ip,db_id, cmd):
                 # jalanin threading buat scanning
                 run_thread_hydra(ip, db_id, db_port[0],"oracle")
                 run_thread_va(ip,db_id,db_port[0])
+            elif c.find('tcp open')!=-1 or c.find('tcp  open')!=-1 or c.find('tcp   open')!=-1:
+                result += c
+                result += '\n' 
         # print(result)
-        form = ScanResultForm({'ScanID': db_id, 'ScanType' : "1", 'Description': hasil})
+        form = ScanResultForm({'ScanID': db_id, 'ScanType' : "1", 'Description': result})
         if form.is_valid():
             form.save()
     elif hasil.find("try -Pn")!=-1:
-        run_nmap(ip,db_id, "nmap -sC -sV -Pn ")
+        run_nmap(ip,db_id, "nmap -sV -Pn ")
     else:
         print("berhasil ke else")
         UPDATE = Scan.objects.get(pk=db_id)

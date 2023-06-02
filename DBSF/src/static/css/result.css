@@ -4,12 +4,25 @@
     font-size: 3vh;
 }
 
-#result-box{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: lightblue;
+#scan-result-header{
+    /* background-color: lightblue; */
     margin: 0 5vw;
-    border-radius: 2rem;
+    /* border-radius: 2rem; */
     padding: 2vh 2vw;
+}
+
+#scan-result-title{
+    font-weight: bold;
+    text-decoration: underline;
+    font-size: 1.5rem;
+}
+
+#scan-result-header-table{
+    border: solid black 1px;
+}
+
+#scan-result-header-table tr td{
+    padding:0 1rem;
+    border: 1.5px solid #000000;
+    text-align: left;
 }

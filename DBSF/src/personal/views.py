@@ -3,6 +3,39 @@ from .forms import *
 from .models import *
 from .fullscan import *
 
+# create normal function here
+def removeWhiteSpace(TeXt):
+    ctr = 0
+    for x in TeXt:
+        if x == ' ':
+            ctr+=1
+        else:
+            break
+    return TeXt[ctr:]
+
+def scanHeader(scan_id):
+    try:
+        scan_header = []
+        nmap_result = ScanResult.objects.get(ScanID=scan_id, ScanType= "1")
+        nmap_result = nmap_result.Description
+        for line in nmap_result.split('\n'):
+            data={}
+            if line.find('/tcp open ')!=-1:
+                tempport = line.split('/tcp open  ')
+            elif line.find('/tcp  open ')!=-1:
+                tempport = line.split('/tcp  open  ')
+            elif line.find('/tcp   open ')!=-1:
+                tempport = line.split('/tcp   open  ')
+            tempservice = tempport[1].split(' ')
+            tempversion = tempport[1].split(str(tempservice[0]))
+            data['port']= tempport[0]
+            data['service']= tempservice[0]
+            data['version']= removeWhiteSpace(tempversion[1])
+            scan_header.append(data)
+    except:
+        pass
+    return scan_header
+
 # Create your views here.
 def home_screen_view(request):
     # print(request.headers)
@@ -42,10 +75,19 @@ def delete_scan_list(request, scan_id):
     return redirect(scanlist_screen_view)
 
 def view_scan_result(request, scan_id):
-    # print("test")
+    # scan list
     scan_list = ScanResult.objects.filter(ScanID=scan_id)
-    # filter output user sini
+
+    # fail checker
     failChecker = Scan.objects.get(pk=scan_id)
     if failChecker.Status=="Failed":
         return render(request, "scanresult.html",{'failCtr':"Failed"})  
-    return render(request, "scanresult.html",{'failCtr':"Not Failed",'scan_list':scan_list})  
+    elif failChecker.Status=="On Going":
+        return render(request, "scanresult.html",{'failCtr':"On Going"})  
+    
+    # filter header
+    scan_header=scanHeader(scan_id)
+
+    
+        
+    return render(request, "scanresult.html",{'failCtr':"Not Failed",'ip':failChecker.IPAddress,'scan_header':scan_header,'scan_list':scan_list})  
