@@ -35,8 +35,11 @@
         <!-- tampilin data -->
         {% for l in scan_list %}
         <div id="result-box">
-            <p>RESULT</p>
-            {{l.Description}}
+            <p>Result for Port Number: {{l.portNumber}} </p>
+            <p>Vulners scan:</p>
+            <p>{{l.vulners}}</p>
+            <p>Hydra Scan (Format: username###password)</p>
+            <p>{{l.credential}}</p>
         </div>
         {% endfor %}
     {% endif %}        

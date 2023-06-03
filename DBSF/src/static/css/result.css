@@ -22,7 +22,15 @@
 }
 
 #scan-result-header-table tr td{
-    padding:0 1rem;
+    padding:5px 12px;
     border: 1.5px solid #000000;
     text-align: left;
+}
+
+#result-box{
+    margin: 0 7vw;
+    margin-top: 3vh;
+    background-color: rgb(83, 83, 228);
+    border-radius: 2rem;
+    padding: 2vh 2vw;
 }

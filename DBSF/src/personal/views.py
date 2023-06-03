@@ -15,6 +15,7 @@ def removeWhiteSpace(TeXt):
 
 def scanHeader(scan_id):
     try:
+        portList = []
         scan_header = []
         nmap_result = ScanResult.objects.get(ScanID=scan_id, ScanType= "1")
         nmap_result = nmap_result.Description
@@ -32,9 +33,54 @@ def scanHeader(scan_id):
             data['service']= tempservice[0]
             data['version']= removeWhiteSpace(tempversion[1])
             scan_header.append(data)
+
+            # save port number and db type
+            if line.find('tcp open  mysql')!=-1 or line.find('tcp  open  mysql')!=-1 or line.find('tcp   open  mysql')!=-1:
+                tempDataStore = {}
+                tempDataStore["dbType"] = "mysql"
+                db_port = line.split('/')
+                tempDataStore["portNumber"] = db_port[0]
+                portList.append(tempDataStore)
+            elif line.find('tcp open  oracle')!=-1 or line.find('tcp  open  oracle')!=-1 or line.find('tcp   open  oracle')!=-1:
+                tempDataStore = {}
+                tempDataStore["dbType"] = "oracle"
+                db_port = line.split('/')
+                tempDataStore["portNumber"] = db_port[0]
+                portList.append(tempDataStore)
     except:
         pass
-    return scan_header
+    return scan_header , portList
+
+def scanResultAdd(scanResult, dbPort, data,scanType):
+    i=0
+    for s in scanResult:
+        
+        if s['portNumber'] == dbPort:
+            if scanType == "2":
+                scanResult[i]["credential"]=data
+            elif scanType == "5":
+                scanResult[i]["vulners"]=data
+        i+=1
+    return scanResult
+
+def scanResultExtract(scan_id, portList):
+    scanResult = portList
+    scan_list = ScanResult.objects.filter(ScanID=scan_id)
+    for sl in scan_list:
+        if sl.ScanType == "1":
+            pass
+        elif sl.ScanType == "2":
+            tempData = sl.Description
+            tempDataPort = tempData.split('\n')
+            tempDataPort = tempDataPort[0]
+            scanResult = scanResultAdd(scanResult,tempDataPort, tempData,"2")
+        elif sl.ScanType == "5":
+            tempData = sl.Description
+            tempDataPort = tempData.split('/')
+            tempDataPort = tempDataPort[0]
+            scanResult = scanResultAdd(scanResult,tempDataPort, tempData,"5")
+    return scanResult
+
 
 # Create your views here.
 def home_screen_view(request):
@@ -86,8 +132,21 @@ def view_scan_result(request, scan_id):
         return render(request, "scanresult.html",{'failCtr':"On Going"})  
     
     # filter header
-    scan_header=scanHeader(scan_id)
+    scan_header , portList = scanHeader(scan_id)
 
+    # filter result
+    scanListResult = scanResultExtract(scan_id, portList)
+    # for currPort in portList:
+    #     if currPort["dbType"]=="mysql":
+    #         tempDataStore["dbType"]="mysql"
+    #         tempDataStore["portNumber"]=currPort["portNumber"]
+
+    #         # take vulners data from database
+    #         vulnersData = ScanResult.objects.get(ScanID=scan_id,ScanType="5")
+
+    #         credentialData = ScanResult.objects.get(ScanID=scan_id,ScanType="5")
+    #     elif currPort["dbType"]=="oracle":
+    #         pass
     
         
-    return render(request, "scanresult.html",{'failCtr':"Not Failed",'ip':failChecker.IPAddress,'scan_header':scan_header,'scan_list':scan_list})  
+    return render(request, "scanresult.html",{'failCtr':"Not Failed",'ip':failChecker.IPAddress,'scan_header':scan_header,'scan_list':scanListResult})  

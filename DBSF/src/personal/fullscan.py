@@ -48,17 +48,31 @@ def run_hydra(ip,db_id, db_port, db_type):
     op = subprocess.run(CMD, shell=True, stdout=subprocess.PIPE)
     hasil = op.stdout
     hasil = hasil.decode('UTF-8')
+    print(f"hasil hydra {hasil}")
+    container = hasil.split('\n')
     
-    form = ScanResultForm({'ScanID': db_id, 'ScanType' : "2", 'Description': hasil})
-
-    #if oracle cek kalo sid ketemu
     if db_type=="oracle":
         # cek sid ketemu ga
-        container = hasil.split('\n')
+        sidList = ""
         for c in container:
             if c.find("login: ")!=-1:
                 sid = c.split('login: ')[1]
+                sidList = sidList + "\n" +sid
                 run_thread_tns(ip, db_id, db_port, sid)
+        print(f"sidList = {sidList}")
+        form = ScanResultForm({'ScanID': db_id, 'ScanType' : "2", 'Description': sidList})
+
+    elif db_type=="mysql":
+        credentialList = "" + str(db_port)
+        for c in container:
+            if c.find("login: ")!=-1:
+                credential = c.split("login: ")
+                credential = credential[1]
+                credential = credential.replace(" ","")
+                credential = credential.split("password:")
+                credentialList = credentialList + "\n" + credential[0] + "###" + credential[1]
+        print(f"credentialList = {credentialList}")
+        form = ScanResultForm({'ScanID': db_id, 'ScanType' : "2", 'Description': credentialList})
                 
         
 
@@ -100,8 +114,13 @@ def run_va(ip, db_id, db_port):
     op = subprocess.run(CMD, shell=True, stdout=subprocess.PIPE)
     hasil = op.stdout
     hasil = hasil.decode('UTF-8')
-
-    form = ScanResultForm({'ScanID': db_id, 'ScanType' : "5", 'Description': hasil})
+    
+    cleanData = hasil.split('VERSION')
+    cleanData = cleanData[1]
+    cleanData = cleanData.split('Service detection performed.')
+    cleanData = cleanData[0]
+    print(f"hasil va : {cleanData}")
+    form = ScanResultForm({'ScanID': db_id, 'ScanType' : "5", 'Description': cleanData})
     if form.is_valid():
         form.save()
 
@@ -125,7 +144,7 @@ def run_nmap(ip,db_id, cmd):
         result = ""
         
         for c in container:
-            if c.find('tcp open  mysql')!=-1:
+            if c.find('tcp open  mysql')!=-1 or c.find('tcp  open  mysql')!=-1 or c.find('tcp   open  mysql')!=-1:
                 result += c
                 result += '\n' 
 
@@ -134,7 +153,7 @@ def run_nmap(ip,db_id, cmd):
                 # jalanin threading buat scanning
                 run_thread_hydra(ip, db_id, db_port[0],"mysql")
                 run_thread_va(ip,db_id,db_port[0])
-            elif c.find('tcp open  oracle')!=-1:
+            elif c.find('tcp open  oracle')!=-1 or c.find('tcp  open  oracle')!=-1 or c.find('tcp   open  oracle')!=-1:
                 result += c
                 result += '\n' 
                 ODAT = 1
@@ -178,7 +197,7 @@ def run_sqlmap(packet_path,db_id):
     op = subprocess.run(CMD, shell=True, stdout=subprocess.PIPE)
     hasil = op.stdout
     hasil = hasil.decode('UTF-8')
-
+    print(f"hasil sqlmap : {hasil}")
     form = ScanResultForm({'ScanID': db_id, 'ScanType' : "3", 'Description': hasil})
     form.save()
 
