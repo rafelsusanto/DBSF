@@ -18,19 +18,31 @@
 }
 
 #scan-result-header-table{
-    border: solid black 1px;
+    border: solid rgb(0, 0, 119) 1px;
+    background-color: rgb(0, 0, 119);
 }
+
+#scan-result-header-table tbody tr:nth-child(even) {background-color: #c5c5c5;}
 
 #scan-result-header-table tr td{
     padding:5px 12px;
-    border: 1.5px solid #000000;
+    border: 1px solid white;
     text-align: left;
+}
+
+#scan-result-header-table tbody tr {
+    background-color: #f2f2f2;
 }
 
 #result-box{
     margin: 0 7vw;
+    width: 82vw;
     margin-top: 3vh;
     background-color: rgb(83, 83, 228);
     border-radius: 2rem;
     padding: 2vh 2vw;
+}
+
+#scan-result-thead td{
+    color:white;
 }

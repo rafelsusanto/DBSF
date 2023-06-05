@@ -2,44 +2,71 @@
 
 {% block content %}
     {% if failCtr == "Failed" %}
-        <!-- tampilin fail ui -->
-    
+        <!-- tampilin error msg ui -->
         <p style="display: flex;align-items: center;justify-content: center;color: red; font-size: 2rem;">Failed to scan the target, please create a new scan to retry.</p>
     {% elif failCtr == "On Going" %}
         <p style="display: flex;align-items: center;justify-content: center;color: red; font-size: 2rem;">Scan is on going, please check again later.</p>
     {% else %}
+
+        <!-- scan header -->
         <div id="scan-result-header">
             <p id="scan-result-title">Target Info</p>
             <p>Target IP Address / URL = {{ip}}</p>
-            <table id="scan-result-header-table"> 
-                <thead>
-                    <tr>
-                        <td style="width: 10%;">Port</td>
-                        <td style="width: 15%;">Service</td>
-                        <td >Version</td>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for sh in scan_header %}
+            <div id="scan-result-header-table-bg">
+                <table id="scan-result-header-table"> 
+                    <thead id="scan-result-thead">
                         <tr>
-                            <td>{{sh.port}}</td>
-                            <td>{{sh.service}}</td>
-                            <td>{{sh.version}}</td>
+                            <td style="width: 10%;">Port</td>
+                            <td>State</td>
+                            <td style="width: 15%;">Service</td>
+                            <td >Version</td>
                         </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        {% for sh in scan_header %}
+                            <tr>
+                                <td>{{sh.port}}</td>
+                                <td>{{sh.state}}</td>
+                                <td>{{sh.service}}</td>
+                                <td>{{sh.version}}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
         
-        
+        <!-- sql result -->
+        {% if sql_result == "" %}
+        {% else %}
+        <div id="result-box">
+            <p>SQLMap Result</p>
+            <pre>{{sql_result|linebreaksbr}}</pre>
+        </div>
+        {% endif %}
+
+
         <!-- tampilin data -->
         {% for l in scan_list %}
         <div id="result-box">
-            <p>Result for Port Number: {{l.portNumber}} </p>
-            <p>Vulners scan:</p>
-            <p>{{l.vulners}}</p>
-            <p>Hydra Scan (Format: username###password)</p>
-            <p>{{l.credential}}</p>
+            {% if l.dbType == "oracle"%}
+                <p>Result for Port Number: {{l.portNumber}} </p>
+                <p>Vulners scan:</p>
+                <pre>{{l.vulners|linebreaksbr}}</pre>
+                <p>SID:</p>
+                {% if l.sid == "Empty" %}
+                <p>No SID found ! </p>
+                {% else %}
+                <p>{{l.sid}}</p>
+                {% endif %}
+                <p>TNS Poisoning: {{l.tns}}</p>
+            {% else %}
+                <p>Result for Port Number: {{l.portNumber}} </p>
+                <p>Vulners scan:</p>
+                <pre>{{l.vulners|linebreaksbr}}</pre>
+                <p>Hydra Scan (Format: username###password)</p>
+                <p>{{l.credential}}</p>
+            {% endif %}
         </div>
         {% endfor %}
     {% endif %}        

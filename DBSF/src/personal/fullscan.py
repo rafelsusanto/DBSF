@@ -53,14 +53,14 @@ def run_hydra(ip,db_id, db_port, db_type):
     
     if db_type=="oracle":
         # cek sid ketemu ga
-        sidList = ""
+        sidList = "" + str(db_port)
         for c in container:
             if c.find("login: ")!=-1:
                 sid = c.split('login: ')[1]
-                sidList = sidList + "\n" +sid
+                sidList = sidList + "\n" + "- "+ sid
                 run_thread_tns(ip, db_id, db_port, sid)
         print(f"sidList = {sidList}")
-        form = ScanResultForm({'ScanID': db_id, 'ScanType' : "2", 'Description': sidList})
+        form = ScanResultForm({'ScanID': db_id, 'ScanType' : "4", 'Description': sidList})
 
     elif db_type=="mysql":
         credentialList = "" + str(db_port)
@@ -94,8 +94,8 @@ def run_tns(ip, db_id, db_port,sid):
     op = subprocess.run(CMD, shell=True, stdout=subprocess.PIPE)
     hasil = op.stdout
     hasil = hasil.decode('UTF-8')
-
-    form = ScanResultForm({'ScanID': db_id, 'ScanType' : "3", 'Description': hasil})
+    hasil = str(db_port)+'\n'+hasil
+    form = ScanResultForm({'ScanID': db_id, 'ScanType' : "6", 'Description': hasil})
     if form.is_valid():
         form.save()
 
@@ -144,7 +144,7 @@ def run_nmap(ip,db_id, cmd):
         result = ""
         
         for c in container:
-            if c.find('tcp open  mysql')!=-1 or c.find('tcp  open  mysql')!=-1 or c.find('tcp   open  mysql')!=-1:
+            if c.find('tcp open  mysql')!=-1 or c.find('tcp  open  mysql')!=-1 or c.find('tcp   open  mysql')!=-1 or c.find('tcp open     mysql')!=-1 or c.find('tcp  open     mysql')!=-1 or c.find('tcp   open     mysql')!=-1:
                 result += c
                 result += '\n' 
 
@@ -153,7 +153,7 @@ def run_nmap(ip,db_id, cmd):
                 # jalanin threading buat scanning
                 run_thread_hydra(ip, db_id, db_port[0],"mysql")
                 run_thread_va(ip,db_id,db_port[0])
-            elif c.find('tcp open  oracle')!=-1 or c.find('tcp  open  oracle')!=-1 or c.find('tcp   open  oracle')!=-1:
+            elif c.find('tcp open  oracle')!=-1 or c.find('tcp  open  oracle')!=-1 or c.find('tcp   open  oracle')!=-1 or c.find('tcp open     oracle')!=-1 or c.find('tcp  open     oracle')!=-1 or c.find('tcp   open     oracle')!=-1:
                 result += c
                 result += '\n' 
                 ODAT = 1
@@ -162,7 +162,7 @@ def run_nmap(ip,db_id, cmd):
                 # jalanin threading buat scanning
                 run_thread_hydra(ip, db_id, db_port[0],"oracle")
                 run_thread_va(ip,db_id,db_port[0])
-            elif c.find('tcp open')!=-1 or c.find('tcp  open')!=-1 or c.find('tcp   open')!=-1:
+            elif c.find('tcp open')!=-1 or c.find('tcp  open')!=-1 or c.find('tcp   open')!=-1 or c.find('tcp filtered')!=-1 or c.find('tcp  filtered')!=-1 or c.find('tcp   filtered')!=-1:
                 result += c
                 result += '\n' 
         # print(result)

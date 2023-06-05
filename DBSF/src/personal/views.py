@@ -3,6 +3,15 @@ from .forms import *
 from .models import *
 from .fullscan import *
 
+from django import template
+from django.utils.safestring import mark_safe
+
+register = template.Library()
+
+@register.filter()
+def nbsp(value):
+    return mark_safe("&nbsp;".join(value.split(' ')))
+
 # create normal function here
 def removeWhiteSpace(TeXt):
     ctr = 0
@@ -19,14 +28,35 @@ def scanHeader(scan_id):
         scan_header = []
         nmap_result = ScanResult.objects.get(ScanID=scan_id, ScanType= "1")
         nmap_result = nmap_result.Description
+        print(nmap_result)
         for line in nmap_result.split('\n'):
             data={}
-            if line.find('/tcp open ')!=-1:
+            data['state']="open"
+            data['tns'] = "Empty"
+            data['vulners'] = "Empty"
+            data['sid'] = "Empty"
+            data['credential'] = "Empty"
+            if line.find('/tcp open     ')!=-1:
+                tempport = line.split('/tcp open     ')
+            elif line.find('/tcp  open     ')!=-1:
+                tempport = line.split('/tcp  open     ')
+            elif line.find('/tcp   open     ')!=-1:
+                tempport = line.split('/tcp   open     ')
+            elif line.find('/tcp open ')!=-1:
                 tempport = line.split('/tcp open  ')
             elif line.find('/tcp  open ')!=-1:
                 tempport = line.split('/tcp  open  ')
             elif line.find('/tcp   open ')!=-1:
                 tempport = line.split('/tcp   open  ')
+            elif line.find('/tcp filtered ')!=-1  :
+                data['state']="filtered"
+                tempport = line.split('/tcp filtered ')
+            elif line.find('/tcp  filtered ')!=-1:
+                data['state']="filtered"
+                tempport = line.split('/tcp  filtered ')
+            elif line.find('/tcp   filtered ')!=-1:
+                data['state']="filtered"
+                tempport = line.split('/tcp   filtered ')
             tempservice = tempport[1].split(' ')
             tempversion = tempport[1].split(str(tempservice[0]))
             data['port']= tempport[0]
@@ -35,13 +65,13 @@ def scanHeader(scan_id):
             scan_header.append(data)
 
             # save port number and db type
-            if line.find('tcp open  mysql')!=-1 or line.find('tcp  open  mysql')!=-1 or line.find('tcp   open  mysql')!=-1:
+            if line.find('tcp open  mysql')!=-1 or line.find('tcp  open  mysql')!=-1 or line.find('tcp   open  mysql')!=-1 or line.find('tcp open     mysql')!=-1 or line.find('tcp  open     mysql')!=-1 or line.find('tcp   open     mysql')!=-1:
                 tempDataStore = {}
                 tempDataStore["dbType"] = "mysql"
                 db_port = line.split('/')
                 tempDataStore["portNumber"] = db_port[0]
                 portList.append(tempDataStore)
-            elif line.find('tcp open  oracle')!=-1 or line.find('tcp  open  oracle')!=-1 or line.find('tcp   open  oracle')!=-1:
+            elif line.find('tcp open  oracle')!=-1 or line.find('tcp  open  oracle')!=-1 or line.find('tcp   open  oracle')!=-1 or line.find('tcp open     oracle')!=-1 or line.find('tcp  open     oracle')!=-1 or line.find('tcp   open     oracle')!=-1:
                 tempDataStore = {}
                 tempDataStore["dbType"] = "oracle"
                 db_port = line.split('/')
@@ -58,14 +88,20 @@ def scanResultAdd(scanResult, dbPort, data,scanType):
         if s['portNumber'] == dbPort:
             if scanType == "2":
                 scanResult[i]["credential"]=data
+            elif scanType == "4":
+                scanResult[i]["sid"]=data    
             elif scanType == "5":
                 scanResult[i]["vulners"]=data
+            elif scanType == "6":
+                scanResult[i]["tns"]=data
         i+=1
+
     return scanResult
 
 def scanResultExtract(scan_id, portList):
     scanResult = portList
     scan_list = ScanResult.objects.filter(ScanID=scan_id)
+    sqlResult = ""
     for sl in scan_list:
         if sl.ScanType == "1":
             pass
@@ -74,12 +110,39 @@ def scanResultExtract(scan_id, portList):
             tempDataPort = tempData.split('\n')
             tempDataPort = tempDataPort[0]
             scanResult = scanResultAdd(scanResult,tempDataPort, tempData,"2")
+        elif sl.ScanType == "3":
+            tempData = sl.Description
+            tempData = tempData.split('[*] starting')
+            sqlResult = nbsp("[*] starting"+tempData[1])
+        elif sl.ScanType == "4":
+            tempData = sl.Description
+            tempDataPort = tempData.split('\n')
+            tempDataPort = tempDataPort[0]
+
+            # ngambil sid list
+            index =0 
+            for tempLine in tempData:
+                index+=1
+                if tempLine == '\n':
+                    break
+            scanResult = scanResultAdd(scanResult,tempDataPort, tempData[index:],"4")
         elif sl.ScanType == "5":
             tempData = sl.Description
             tempDataPort = tempData.split('/')
             tempDataPort = tempDataPort[0]
+            # proccesss
+            tempData = nbsp(tempData)
             scanResult = scanResultAdd(scanResult,tempDataPort, tempData,"5")
-    return scanResult
+        elif sl.ScanType == "6":
+            tempData = sl.Description
+            tempDataPort = tempData.split('\n')
+            tempDataPort = tempDataPort[0]
+            if tempData.find("The target is not vulnerable to a remote TNS poisoning"):
+                scanResult = scanResultAdd(scanResult,tempDataPort, "Not Vulnerable","6")
+            else:
+                tempData = "Vulnerable ->  " + nbsp(tempData)
+                scanResult = scanResultAdd(scanResult,tempDataPort, tempData,"6")
+    return scanResult, sqlResult
 
 
 # Create your views here.
@@ -135,18 +198,9 @@ def view_scan_result(request, scan_id):
     scan_header , portList = scanHeader(scan_id)
 
     # filter result
-    scanListResult = scanResultExtract(scan_id, portList)
-    # for currPort in portList:
-    #     if currPort["dbType"]=="mysql":
-    #         tempDataStore["dbType"]="mysql"
-    #         tempDataStore["portNumber"]=currPort["portNumber"]
-
-    #         # take vulners data from database
-    #         vulnersData = ScanResult.objects.get(ScanID=scan_id,ScanType="5")
-
-    #         credentialData = ScanResult.objects.get(ScanID=scan_id,ScanType="5")
-    #     elif currPort["dbType"]=="oracle":
-    #         pass
+    sqlResult = ""
+    scanListResult, sqlResult = scanResultExtract(scan_id, portList)
     
+    print(f"sqlResult = {sqlResult}")
         
-    return render(request, "scanresult.html",{'failCtr':"Not Failed",'ip':failChecker.IPAddress,'scan_header':scan_header,'scan_list':scanListResult})  
+    return render(request, "scanresult.html",{'failCtr':"Not Failed",'ip':failChecker.IPAddress,'scan_header':scan_header,'scan_list':scanListResult, 'sql_result':sqlResult})  
