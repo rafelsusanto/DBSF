@@ -72,3 +72,7 @@
 }
 
 #credential-result-table tbody tr:nth-child(even) {background-color: #c5c5c5;}
+
+.result-box-header{
+    margin-top: 3vh;
+}

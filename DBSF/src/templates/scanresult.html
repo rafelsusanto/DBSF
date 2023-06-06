@@ -51,22 +51,22 @@
         <div id="result-box">
             {% if l.dbType == "oracle"%}
                 <h3>Port Number: {{l.portNumber}} </h3>
-                <p>Vulners scan:</p>
+                <p class="result-box-header">Vulners scan:</p>
                 <pre>{{l.vulners|linebreaksbr}}</pre>
-                <p>SID:</p>
+                <p class="result-box-header">SID:</p>
                 {% if l.sid == "Empty" %}
                 <pre>No SID found ! </pre>
                 
                 {% else %}
                 <pre>{{l.sid}}</pre>
                 {% endif %}
-                <p>TNS Poisoning: </p>
+                <p class="result-box-header">TNS Poisoning: </p>
                 <pre>{{l.tns}}</pre>
             {% else %}
                 <h3>Port Number: {{l.portNumber}} </h3>
-                <p>Vulners scan:</p>
+                <p class="result-box-header">Vulners scan:</p>
                 <pre>{{l.vulners|linebreaksbr}}</pre>
-                <p>Hydra Scan</p>
+                <p class="result-box-header">Hydra Scan:</p>
                 {% if l.credential %}
                     <table id="credential-result-table">
                         <thead>
