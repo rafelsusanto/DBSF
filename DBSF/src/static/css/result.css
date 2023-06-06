@@ -26,7 +26,7 @@
 
 #scan-result-header-table tr td{
     padding:5px 12px;
-    border: 1px solid white;
+    border: 1px solid #f2f2f2;;
     text-align: left;
 }
 
@@ -35,14 +35,40 @@
 }
 
 #result-box{
-    margin: 0 7vw;
     width: 82vw;
-    margin-top: 3vh;
+    margin: 3vh 7vw;
     background-color: rgb(83, 83, 228);
-    border-radius: 2rem;
     padding: 2vh 2vw;
+    border: 1px solid black;
 }
 
 #scan-result-thead td{
     color:white;
 }
+
+#result-box h3{ text-decoration: underline;}
+
+#result-box pre{
+    margin-left: 1vw;
+}
+
+#credential-result-table{
+    margin-left: 1vw;
+    font-size:0.8rem;
+    background-color: rgb(0, 0, 119); 
+    border: 1px solid black;
+}
+
+#credential-result-table thead tr td{
+    background-color:rgb(0, 0, 119); 
+    color: #f2f2f2;
+    border: 1px solid #f2f2f2;
+}
+
+#credential-result-table tr td{
+    /* border: 1px solid white; */
+    padding: 0.5vh 1vw;
+    background-color: #f2f2f2;;
+}
+
+#credential-result-table tbody tr:nth-child(even) {background-color: #c5c5c5;}

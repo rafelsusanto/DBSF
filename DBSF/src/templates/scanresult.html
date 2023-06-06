@@ -40,7 +40,7 @@
         {% if sql_result == "" %}
         {% else %}
         <div id="result-box">
-            <p>SQLMap Result</p>
+            <h3>SQLMap Result</h3>
             <pre>{{sql_result|linebreaksbr}}</pre>
         </div>
         {% endif %}
@@ -50,22 +50,43 @@
         {% for l in scan_list %}
         <div id="result-box">
             {% if l.dbType == "oracle"%}
-                <p>Result for Port Number: {{l.portNumber}} </p>
+                <h3>Port Number: {{l.portNumber}} </h3>
                 <p>Vulners scan:</p>
                 <pre>{{l.vulners|linebreaksbr}}</pre>
                 <p>SID:</p>
                 {% if l.sid == "Empty" %}
-                <p>No SID found ! </p>
+                <pre>No SID found ! </pre>
+                
                 {% else %}
-                <p>{{l.sid}}</p>
+                <pre>{{l.sid}}</pre>
                 {% endif %}
-                <p>TNS Poisoning: {{l.tns}}</p>
+                <p>TNS Poisoning: </p>
+                <pre>{{l.tns}}</pre>
             {% else %}
-                <p>Result for Port Number: {{l.portNumber}} </p>
+                <h3>Port Number: {{l.portNumber}} </h3>
                 <p>Vulners scan:</p>
                 <pre>{{l.vulners|linebreaksbr}}</pre>
-                <p>Hydra Scan (Format: username###password)</p>
-                <p>{{l.credential}}</p>
+                <p>Hydra Scan</p>
+                {% if l.credential %}
+                    <table id="credential-result-table">
+                        <thead>
+                            <tr>
+                                <td >Username</td>
+                                <td >Password</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for s in l.credential %}
+                            <tr>
+                                <td>{{s.username}}</td>
+                                <td>{{s.password}}</td>
+                            </tr>
+                            {% endfor%}
+                        </tbody>
+                    </table>
+                {% else %}
+                <pre>No Credential found! </pre>
+                {% endif %}
             {% endif %}
         </div>
         {% endfor %}

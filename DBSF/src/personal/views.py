@@ -35,7 +35,7 @@ def scanHeader(scan_id):
             data['tns'] = "Empty"
             data['vulners'] = "Empty"
             data['sid'] = "Empty"
-            data['credential'] = "Empty"
+            data['credential'] = []
             if line.find('/tcp open     ')!=-1:
                 tempport = line.split('/tcp open     ')
             elif line.find('/tcp  open     ')!=-1:
@@ -87,9 +87,17 @@ def scanResultAdd(scanResult, dbPort, data,scanType):
         
         if s['portNumber'] == dbPort:
             if scanType == "2":
-                scanResult[i]["credential"]=data
+                credList = []
+                for d in data.split('\n'):
+                    tempDic = {}
+                    d = d.split("###")
+                    tempDic["username"]=d[0]
+                    tempDic["password"]=d[1]
+                    credList.append(tempDic)
+                scanResult[i]["credential"]=credList 
+                
             elif scanType == "4":
-                scanResult[i]["sid"]=data    
+                scanResult[i]["sid"]=data
             elif scanType == "5":
                 scanResult[i]["vulners"]=data
             elif scanType == "6":
@@ -109,7 +117,13 @@ def scanResultExtract(scan_id, portList):
             tempData = sl.Description
             tempDataPort = tempData.split('\n')
             tempDataPort = tempDataPort[0]
-            scanResult = scanResultAdd(scanResult,tempDataPort, tempData,"2")
+            # ngambil sid list
+            index =0 
+            for tempLine in tempData:
+                index+=1
+                if tempLine == '\n':
+                    break
+            scanResult = scanResultAdd(scanResult,tempDataPort, tempData[index:],"2")
         elif sl.ScanType == "3":
             tempData = sl.Description
             tempData = tempData.split('[*] starting')
