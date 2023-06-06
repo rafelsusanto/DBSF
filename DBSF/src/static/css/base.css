@@ -24,6 +24,9 @@ body{
 
 #logo{
     height: 10vh;
+    /* width: 14vw; */
+    display: flex;
+    justify-content: center;
     align-items: center;
 }
 
@@ -77,7 +80,7 @@ footer{
   
     /* dropdown content (submenu) */
     #dropdown-content {
-      width: 14vw;
+      width: 16vw;
       left:0vw;
       display:none;
       position: absolute;
@@ -90,14 +93,17 @@ footer{
       text-align: center;
       text-decoration: none;
       color: white;
-      font-size: 1.2rem;
-      width: auto;
-      padding: 1rem 1rem;
+      font-size: 1rem;
+      width: 14vw;
+      padding: 1vh 1vw;
     }
+
+    
+
   
     #dropdown-content a:hover {
       background-color: rgba(172, 172, 172);
-      width: auto;
+      width: 14vw;
     }
 
     #dropdown-logo{
@@ -110,6 +116,7 @@ footer{
   input:checked ~ #dropdown-content{
     display: grid;
     grid-template-rows: auto auto auto auto auto auto 1fr;
+    /* change height */
     height: 100vh;
     top: 0;
   }
@@ -124,4 +131,10 @@ footer{
 #base-body{
     display: grid;
     grid-template-columns: 0fr 1fr;
+}
+
+#dropdown-content img{
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

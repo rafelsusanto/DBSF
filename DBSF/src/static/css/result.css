@@ -35,10 +35,10 @@
 }
 
 #result-box{
-    width: 82vw;
-    margin: 3vh 7vw;
+    width: 82%;
+    margin: 3% 7%;
     background-color: rgb(83, 83, 228);
-    padding: 2vh 2vw;
+    padding: 2% 2%;
     border: 1px solid black;
 }
 

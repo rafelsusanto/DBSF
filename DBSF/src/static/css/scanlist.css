@@ -6,8 +6,8 @@
 
 #scan-list-table-div{
     display: flex;
-    width: 80vw;
-    margin:0 10vw;
+    width: 80%;
+    margin:0 10%;
     background-color: rgb(0, 0, 119);
     align-items: center;
     justify-content: center;
