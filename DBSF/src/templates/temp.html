@@ -1,0 +1,23 @@
+<tbody>
+    {% for l in scan_list %}
+    <tr>
+        <td>{{l.Name}}</td>
+        <td>{{l.IPAddress}}</td>
+        <td>{{l.Created_at}}</td>
+        <td class="scan-status" >
+            <!-- status color -->
+            {% if l.Status == "On Going" %}
+            <div class="scan-list-sizing" id="scan-list-box-item-1-2">On Going</div>
+            {% elif l.Status == "Failed" %}
+            <div class="scan-list-sizing" id="scan-list-box-item-1-3">Failed</div>
+            {% else %}
+            <div class="scan-list-sizing" id="scan-list-box-item-1-1">Done</div>
+            {% endif %}
+        </td>
+        <td class="scan-activities">
+            <a href="view_scan_result/{{l.id}}" class="scan-list-sizing" id="scan-list-box-item-2"><img src="{% static 'images/view.svg' %}" alt="view"></a> 
+            <a href="delete_scan_list/{{l.id}}" class="scan-list-sizing" id="scan-list-box-item-3"><img src="{% static 'images/trash-can-solid.svg' %}" alt="trash"></a>
+        </td>
+    </tr>
+    {% endfor %}
+</tbody>

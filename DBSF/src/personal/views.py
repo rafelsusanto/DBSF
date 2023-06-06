@@ -2,9 +2,10 @@ from django.shortcuts import render, redirect
 from .forms import *
 from .models import *
 from .fullscan import *
-
+from django.core.paginator import Paginator
 from django import template
 from django.utils.safestring import mark_safe
+from django.contrib import messages
 
 register = template.Library()
 
@@ -182,18 +183,30 @@ def newscan(request):
             # run(ip)
             run_fullscan(str(l.IPAddress),l.id)
 
-            # redirect to scanlist
-            scan_list = Scan.objects.all()
-            return render(request, "scanlist.html",{'scan_list':scan_list,'msg' : "Saved"})
+            messages.success(request, 'success')
+
+            return redirect(scanlist_screen_view)
     return render(request, "newscan.html")   
 
 def scanlist_screen_view(request, msg="nothing"):
     scan_list = Scan.objects.all()
-    return render(request, "scanlist.html",{'scan_list':scan_list,'msg' : msg})   
+    paginator = Paginator(scan_list, 8)
+
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    context = {
+        'page_obj': page_obj,
+        'msg' : msg
+    }
+
+    return render(request, "scanlist.html", context)   
 
 def delete_scan_list(request, scan_id):
     DELETE = Scan.objects.get(pk=scan_id)
     DELETE.delete()
+
+    messages.error(request, 'delete')
 
     return redirect(scanlist_screen_view)
 
