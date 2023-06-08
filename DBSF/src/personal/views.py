@@ -29,7 +29,7 @@ def scanHeader(scan_id):
         scan_header = []
         nmap_result = ScanResult.objects.get(ScanID=scan_id, ScanType= "1")
         nmap_result = nmap_result.Description
-        print(nmap_result)
+        # print(nmap_result)
         for line in nmap_result.split('\n'):
             data={}
             data['state']="open"
@@ -85,7 +85,6 @@ def scanHeader(scan_id):
 def scanResultAdd(scanResult, dbPort, data,scanType):
     i=0
     for s in scanResult:
-        
         if s['portNumber'] == dbPort:
             if scanType == "2":
                 credList = []
@@ -124,7 +123,7 @@ def scanResultExtract(scan_id, portList):
                 index+=1
                 if tempLine == '\n':
                     break
-            scanResult = scanResultAdd(scanResult,tempDataPort, tempData[index:],"2")
+            scanResult = scanResultAdd(scanResult,str(tempDataPort), tempData[index:],"2")
         elif sl.ScanType == "3":
             tempData = sl.Description
             tempData = tempData.split('[*] starting')
@@ -223,11 +222,10 @@ def view_scan_result(request, scan_id):
     
     # filter header
     scan_header , portList = scanHeader(scan_id)
-
     # filter result
     sqlResult = ""
     scanListResult, sqlResult = scanResultExtract(scan_id, portList)
     
-    print(f"sqlResult = {sqlResult}")
+    # print(f"sqlResult = {sqlResult}")
         
     return render(request, "scanresult.html",{'failCtr':"Not Failed",'ip':failChecker.IPAddress,'scan_header':scan_header,'scan_list':scanListResult, 'sql_result':sqlResult})  
