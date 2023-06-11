@@ -86,7 +86,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'dbsf',
-        'HOST': '127.0.0.1',
+        'HOST': '172.16.238.10',
         'PORT': '3306',
         'USER': 'django',
         'PASSWORD': 'django-user-password',

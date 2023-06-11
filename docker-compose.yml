@@ -2,17 +2,34 @@ version: '3'
 services:
   db:
     image: mysql:5.7
+    volumes:
+      - ./db:/var/lib/mysql
+    restart: always
+    ports:
+      - "3306:3306"
     environment:
       MYSQL_DATABASE: dbsf
       MYSQL_USER: django
       MYSQL_PASSWORD: django-user-password
       MYSQL_ROOT_PASSWORD: root
+    expose:
+      - "3306"
+    networks:
+      default:
+        ipv4_address: 172.16.238.10
   web:
     build: .
-    command: python3 manage.py runserver 0.0.0.0:8000
+    command: python3 /DBSF/src/manage.py runserver 0.0.0.0:8000
     volumes:
       - .:/app
+    restart: always
     ports:
       - "8000:8000"
     depends_on:
       - db
+    networks:
+      default:
+        driver: bridge
+        ipam:
+          config:
+            - subnet: 172.16.238.0/24
