@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from .forms import *
 from .models import *
 from .fullscan import *
-from django.core.paginator import Paginator
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django import template
 from django.utils.safestring import mark_safe
 from django.contrib import messages
@@ -189,14 +189,53 @@ def newscan(request):
 
 def scanlist_screen_view(request, msg="nothing"):
     scan_list = Scan.objects.all()
+
+    # add search query
+    search_query = ""
+    search_query = request.GET.get('search')
+    if search_query:
+        scan_list = scan_list.filter(Name__icontains=search_query)
+
+    # add sorting
+    sort_by = ""
+    sort_by = request.GET.get('sort')
+    if sort_by == 'name':
+        scan_list = scan_list.order_by('Name')
+    elif sort_by == 'url':
+        scan_list = scan_list.order_by('IPAddress')
+    elif sort_by == 'status':
+        scan_list = scan_list.order_by('Status')
+    elif sort_by == 'time':
+        scan_list = scan_list.order_by('Created_at')
+
+
+    # pagination
     paginator = Paginator(scan_list, 8)
 
     page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
+
+    # ambil data sesuai page number
+    try:
+        page_obj = paginator.page(page_number)
+    # kalo bkn integer
+    except PageNotAnInteger:
+        page_obj = paginator.page(1)
+    # kalo empty page
+    except EmptyPage:
+        # If page is out of range, deliver the last page
+        page_obj = paginator.page(paginator.num_pages)
+
+    if not sort_by:
+        sort_by=""
+    
+    if not search_query:
+        search_query = ""
 
     context = {
         'page_obj': page_obj,
-        'msg' : msg
+        'msg' : msg,
+        'sort_by':sort_by,
+        'search':search_query
     }
 
     return render(request, "scanlist.html", context)   

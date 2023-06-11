@@ -21,3 +21,15 @@
     </tr>
     {% endfor %}
 </tbody>
+
+
+<form method="get" action="{% url 'scanlist' %}" style="margin-top: 1%;">
+    <select name="sort">
+    <option class="sort-list" value="">Sort by</option>
+    <option class="sort-list" value="name" {% if sort_by == 'name' %}selected{% endif %}>Name</option>
+    <option class="sort-list" value="url" {% if sort_by == 'url' %}selected{% endif %}>URL</option>
+    <option class="sort-list" value="time" {% if sort_by == 'time' %}selected{% endif %}>Time</option>
+    <option class="sort-list" value="status" {% if sort_by == 'status' %}selected{% endif %}>Status</option>
+    </select>
+    <button type="submit">Sort</button>
+</form>
