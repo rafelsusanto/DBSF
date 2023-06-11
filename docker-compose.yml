@@ -15,11 +15,13 @@ services:
     expose:
       - "3306"
     networks:
-      default:
-        ipv4_address: 172.16.238.10
+      mynetwork:
+        aliases:
+          - db
+
   web:
     build: .
-    command: python3 /DBSF/src/manage.py runserver 0.0.0.0:8000
+    command: bash -c "sleep 10 && python3 /DBSF/src/manage.py runserver 0.0.0.0:8000"
     volumes:
       - .:/app
     restart: always
@@ -28,8 +30,9 @@ services:
     depends_on:
       - db
     networks:
-      default:
-        driver: bridge
-        ipam:
-          config:
-            - subnet: 172.16.238.0/24
+      mynetwork:
+        aliases:
+          - web
+networks:
+  mynetwork:
+  

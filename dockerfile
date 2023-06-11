@@ -23,8 +23,6 @@ RUN pip3 install -r requirements.txt
 COPY . /code/
 
 # Run Django management commands
-#RUN source ./DBSF/env/bin/activate
-#RUN chmod +x /code/DBSF/Scripts/setup.sh
-#RUN ./DBSF/Scripts/setup.sh
-RUN python3 /code/DBSF/src/manage.py makemigrations
-RUN python3 /code/DBSF/src/manage.py migrate
+RUN /bin/bash -c "source ./DBSF/env/bin/activate && \
+                  python3 /code/DBSF/src/manage.py makemigrations && \
+                  python3 /code/DBSF/src/manage.py migrate"
