@@ -6,9 +6,9 @@ ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
 # Install system packages
-RUN apt-get update
+RUN apt-get update && apt-get install -y default-libmysqlclient-dev python3 python3-pip nmap sqlmap hydra python3-scapy odat 
 #RUN apt-get install -y kali-linux-headless
-RUN apt-get install -y default-libmysqlclient-dev python3 python3-pip nmap sqlmap hydra python3-scapy odat
+
 
 # Set work directory
 WORKDIR /code
