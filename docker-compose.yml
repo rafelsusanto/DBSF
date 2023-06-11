@@ -1,10 +1,23 @@
 version: '3'
 services:
+  web:
+    build:
+      context: .
+      dockerfile: dockerfile
+    command: bash -c "sleep 10 && python3 /code/DBSF/src/manage.py migrate && python3 /code/DBSF/src/manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - .:/code
+    #restart: always
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+
   db:
     image: mysql:latest
     volumes:
       - ./db:/var/lib/mysql
-    restart: always
+    #restart: always
     ports:
       - "3306:3306"
     environment:
@@ -14,25 +27,6 @@ services:
       MYSQL_ROOT_PASSWORD: root
     expose:
       - "3306"
-    networks:
-      mynetwork:
-        aliases:
-          - db
 
-  web:
-    build: .
-    command: bash -c "sleep 10 && python3 /DBSF/src/manage.py runserver 0.0.0.0:8000"
-    volumes:
-      - .:/app
-    restart: always
-    ports:
-      - "8000:8000"
-    depends_on:
-      - db
-    networks:
-      mynetwork:
-        aliases:
-          - web
-networks:
-  mynetwork:
+
   
