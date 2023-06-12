@@ -29,14 +29,15 @@ def scanHeader(scan_id):
         scan_header = []
         nmap_result = ScanResult.objects.get(ScanID=scan_id, ScanType= "1")
         nmap_result = nmap_result.Description
+        print(f"Sebelum function scanHeader \n{nmap_result}")
         # print(nmap_result)
         for line in nmap_result.split('\n'):
             data={}
             data['state']="open"
-            data['tns'] = "Empty"
-            data['vulners'] = "Empty"
-            data['sid'] = "Empty"
-            data['credential'] = []
+            # data['tns'] = "Empty"
+            # data['vulners'] = "Empty"
+            # data['sid'] = "Empty"
+            # data['credential'] = []
             if line.find('/tcp open     ')!=-1:
                 tempport = line.split('/tcp open     ')
             elif line.find('/tcp  open     ')!=-1:
@@ -80,6 +81,9 @@ def scanHeader(scan_id):
                 portList.append(tempDataStore)
     except:
         pass
+    print("Setelah function scanHeader")
+    print(f"scan_header : {scan_header}")
+    print(f"portList : {portList}")
     return scan_header , portList
 
 def scanResultAdd(scanResult, dbPort, data,scanType):
@@ -88,13 +92,16 @@ def scanResultAdd(scanResult, dbPort, data,scanType):
         if s['portNumber'] == dbPort:
             if scanType == "2":
                 credList = []
-                for d in data.split('\n'):
-                    tempDic = {}
-                    d = d.split("###")
-                    tempDic["username"]=d[0]
-                    tempDic["password"]=d[1]
-                    credList.append(tempDic)
-                scanResult[i]["credential"]=credList 
+                try:
+                    for d in data.split('\n'):
+                        tempDic = {}
+                        d = d.split("###")
+                        tempDic["username"]=d[0]
+                        tempDic["password"]=d[1]
+                        credList.append(tempDic)
+                    scanResult[i]["credential"]=credList 
+                except:
+                    scanResult[i]["credential"]=[]
                 
             elif scanType == "4":
                 scanResult[i]["sid"]=data
@@ -170,16 +177,12 @@ def result_screen_view(request):
     return render(request, "result.html",{})
 
 def newscan(request):
-    # print(request.headers)
     if request.method == "POST":
         form = ScanForm(request.POST, request.FILES)
         
         if form.is_valid():
             form.save()
             l = Scan.objects.all().last()
-            # run_nmap(str(l.IPAddress))
-            # run script here
-            # run(ip)
             run_fullscan(str(l.IPAddress),l.id)
 
             messages.success(request, 'success')
@@ -261,10 +264,10 @@ def view_scan_result(request, scan_id):
     
     # filter header
     scan_header , portList = scanHeader(scan_id)
+
     # filter result
     sqlResult = ""
     scanListResult, sqlResult = scanResultExtract(scan_id, portList)
     
-    # print(f"sqlResult = {sqlResult}")
         
     return render(request, "scanresult.html",{'failCtr':"Not Failed",'ip':failChecker.IPAddress,'scan_header':scan_header,'scan_list':scanListResult, 'sql_result':sqlResult})  
