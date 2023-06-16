@@ -13,6 +13,14 @@
                 {% endfor %}
             {% endif %}
             
+            <script>
+                function refreshPage() {
+                  location.reload();
+                }
+              
+                setInterval(refreshPage, 60000);  // Refresh every 1 minute
+            </script>
+
             <p id="scan-list-title">Scan List</p>
             
             <div id="search-sort-div">

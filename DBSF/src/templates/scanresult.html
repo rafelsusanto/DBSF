@@ -9,6 +9,14 @@
     {% else %}
 
         <!-- scan header -->
+        <script>
+            function refreshPage() {
+              location.reload();
+            }
+          
+            setInterval(refreshPage, 60000);  // Refresh every 1 minute
+        </script>
+
         <div id="scan-result-header">
             <p id="scan-result-title">Target Info</p>
             <p>Target IP Address / URL = {{ip}}</p>
