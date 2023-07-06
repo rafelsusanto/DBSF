@@ -79,6 +79,18 @@ def scanHeader(scan_id):
                 db_port = line.split('/')
                 tempDataStore["portNumber"] = db_port[0]
                 portList.append(tempDataStore)
+            elif line.find('tcp open  ms-sql-s')!=-1 or line.find('tcp  open  ms-sql-s')!=-1 or line.find('tcp   open  ms-sql-s')!=-1 or line.find('tcp open     ms-sql-s')!=-1 or line.find('tcp  open     ms-sql-s')!=-1 or line.find('tcp   open     ms-sql-s')!=-1:
+                tempDataStore = {}
+                tempDataStore["dbType"] = "mssql"
+                db_port = line.split('/')
+                tempDataStore["portNumber"] = db_port[0]
+                portList.append(tempDataStore) 
+            elif line.find('tcp open  postgresql')!=-1 or line.find('tcp  open  postgresql')!=-1 or line.find('tcp   open  postgresql')!=-1 or line.find('tcp open     postgresql')!=-1 or line.find('tcp  open     postgresql')!=-1 or line.find('tcp   open     postgresql')!=-1:
+                tempDataStore = {}
+                tempDataStore["dbType"] = "postgresql"
+                db_port = line.split('/')
+                tempDataStore["portNumber"] = db_port[0]
+                portList.append(tempDataStore) 
     except:
         pass
     print("Setelah function scanHeader")

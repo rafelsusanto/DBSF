@@ -70,6 +70,17 @@
                 {% endif %}
                 <p class="result-box-header">TNS Poisoning: </p>
                 <pre>{{l.tns}}</pre>
+            
+            {% elif  l.dbType == "mssql" %}
+                <h3>Port Number: {{l.portNumber}} </h3>
+                <p class="result-box-header">Vulners scan:</p>
+                <pre>{{l.vulners|linebreaksbr}}</pre>
+            
+            {% elif  l.dbType == "postgresql" %}
+                <h3>Port Number: {{l.portNumber}} </h3>
+                <p class="result-box-header">Vulners scan:</p>
+                <pre>{{l.vulners|linebreaksbr}}</pre>
+
             {% else %}
                 <h3>Port Number: {{l.portNumber}} </h3>
                 <p class="result-box-header">Vulners scan:</p>

@@ -180,7 +180,22 @@ def run_nmap(ip,db_id, cmd):
                 # jalanin threading buat scanning
                 run_thread_hydra(ip, db_id, db_port[0],"oracle")
                 run_thread_va(ip,db_id,db_port[0])
-            
+            elif c.find('tcp open  ms-sql-s')!=-1 or c.find('tcp  open  ms-sql-s')!=-1 or c.find('tcp   open  ms-sql-s')!=-1 or c.find('tcp open     ms-sql-s')!=-1 or c.find('tcp  open     ms-sql-s')!=-1 or c.find('tcp   open     ms-sql-s')!=-1:
+               
+                result += c
+                result += '\n' 
+                db_port = c.split('/')
+                
+                # jalanin threading buat scanning
+                run_thread_va(ip,db_id,db_port[0])
+            elif c.find('tcp open  postgresql')!=-1 or c.find('tcp  open  postgresql')!=-1 or c.find('tcp   open  postgresql')!=-1 or c.find('tcp open     postgresql')!=-1 or c.find('tcp  open     postgresql')!=-1 or c.find('tcp   open     postgresql')!=-1:
+               
+                result += c
+                result += '\n' 
+                db_port = c.split('/')
+                
+                # jalanin threading buat scanning
+                run_thread_va(ip,db_id,db_port[0])
 
             elif c.find('tcp open')!=-1 or c.find('tcp  open')!=-1 or c.find('tcp   open')!=-1 or c.find('tcp filtered')!=-1 or c.find('tcp  filtered')!=-1 or c.find('tcp   filtered')!=-1:
                 result += c
