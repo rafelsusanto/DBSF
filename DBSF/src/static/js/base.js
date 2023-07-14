@@ -4,7 +4,7 @@ function checkbox(){
         document.getElementById("logo").style.display = "none";
 
         // move hamburger
-        document.getElementById("dropdown-menu").style.paddingLeft = "15vw";
+        document.getElementById("dropdown-menu").style.paddingLeft = "17vw";
 
         // update grid ratio
         document.getElementById("navbar").style.gridTemplateColumns = "0.6fr 0.4fr 1fr 1fr";

@@ -1,0 +1,10 @@
+dvwaa
+dbsf
+admin
+root
+dbuser
+dbuser123
+cloudera
+moves
+mcUser
+asteriskuser

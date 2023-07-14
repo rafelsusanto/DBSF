@@ -19,14 +19,18 @@ from django.urls import path
 from personal.views import(
     home_screen_view,
     result_screen_view,
-    newscan_screen_view,
+    newscan,
     scanlist_screen_view,
+    delete_scan_list,
+    view_scan_result,
 )
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', home_screen_view),
     path('result', result_screen_view),
-    path('newscan', newscan_screen_view),
-    path('scanlist', scanlist_screen_view),
+    path('newscan', newscan),
+    path('scanlist', scanlist_screen_view, name="scanlist"),
+    path('delete_scan_list/<scan_id>', delete_scan_list),
+    path('view_scan_result/<scan_id>', view_scan_result)
 ]

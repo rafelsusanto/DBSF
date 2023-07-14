@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    {% if failCtr == "Failed" %}
+        <!-- tampilin error msg ui -->
+        <p style="display: flex;align-items: center;justify-content: center;color: red; font-size: 2rem;">Failed to scan the target, please create a new scan to retry.</p>
+    {% elif failCtr == "On Going" %}
+        <p style="display: flex;align-items: center;justify-content: center;color: red; font-size: 2rem;">Scan is on going, please check again later.</p>
+    {% else %}
+
+        <!-- scan header -->
+        <script>
+            function refreshPage() {
+              location.reload();
+            }
+          
+            setInterval(refreshPage, 60000);  // Refresh every 1 minute
+        </script>
+
+        <div id="scan-result-header">
+            <p id="scan-result-title">Target Info</p>
+            <p>Target IP Address / URL = {{ip}}</p>
+            <div id="scan-result-header-table-bg">
+                <table id="scan-result-header-table"> 
+                    <thead id="scan-result-thead">
+                        <tr>
+                            <td style="width: 10%;">Port</td>
+                            <td>State</td>
+                            <td style="width: 15%;">Service</td>
+                            <td >Version</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for sh in scan_header %}
+                            <tr>
+                                <td>{{sh.port}}</td>
+                                <td>{{sh.state}}</td>
+                                <td>{{sh.service}}</td>
+                                <td>{{sh.version}}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- sql result -->
+        {% if sql_result == "" %}
+        {% else %}
+        <div id="result-box">
+            <h3>SQLMap Result</h3>
+            <pre>{{sql_result|linebreaksbr}}</pre>
+        </div>
+        {% endif %}
+
+
+        <!-- tampilin data -->
+        {% for l in scan_list %}
+        <div id="result-box">
+            {% if l.dbType == "oracle"%}
+                <h3>Port Number: {{l.portNumber}} </h3>
+                <p class="result-box-header">Vulners scan:</p>
+                <pre>{{l.vulners|linebreaksbr}}</pre>
+                <p class="result-box-header">SID:</p>
+                {% if l.sid == "Empty" %}
+                <pre>No SID found ! </pre>
+                
+                {% else %}
+                <pre>{{l.sid}}</pre>
+                {% endif %}
+                <p class="result-box-header">TNS Poisoning: </p>
+                <pre>{{l.tns}}</pre>
+            
+            {% elif  l.dbType == "mssql" %}
+                <h3>Port Number: {{l.portNumber}} </h3>
+                <p class="result-box-header">Vulners scan:</p>
+                <pre>{{l.vulners|linebreaksbr}}</pre>
+            
+            {% elif  l.dbType == "postgresql" %}
+                <h3>Port Number: {{l.portNumber}} </h3>
+                <p class="result-box-header">Vulners scan:</p>
+                <pre>{{l.vulners|linebreaksbr}}</pre>
+
+            {% else %}
+                <h3>Port Number: {{l.portNumber}} </h3>
+                <p class="result-box-header">Vulners scan:</p>
+                <pre>{{l.vulners|linebreaksbr}}</pre>
+                <p class="result-box-header">Hydra Scan:</p>
+                {% if l.credential %}
+                    <table id="credential-result-table">
+                        <thead>
+                            <tr>
+                                <td >Username</td>
+                                <td >Password</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for s in l.credential %}
+                            <tr>
+                                <td>{{s.username}}</td>
+                                <td>{{s.password}}</td>
+                            </tr>
+                            {% endfor%}
+                        </tbody>
+                    </table>
+                {% else %}
+                <pre>No Credential found! </pre>
+                {% endif %}
+            {% endif %}
+        </div>
+        {% endfor %}
+    {% endif %}        
+
+{% endblock content %}

@@ -4,11 +4,12 @@
 {% load static %} 
             <p id="new-scan-title">New Scan</p>
             <div id="new-scan-box-form">
-                <form action="">
+                <form action="/newscan" method="POST" enctype="multipart/form-data">
+                    {%csrf_token%}
                     <div id="new-scan-form-input">
-                        <p>Name:</p><input type="text" id="new-scan-input">
-                        <p>Target IP:</p><input type="text" id="new-scan-input">
-                        <p>Packet Request:</p><input type="text" id="new-scan-input">
+                        <p>Name:</p><input type="text" id="new-scan-input" name="Name" placeholder="Input name">
+                        <p>Target IP Address / URL:</p><input type="text" id="new-scan-input" name="IPAddress" placeholder="Ex. 192.1.1.1 / test.website.com">
+                        <p>Packet Request for testing SQLi (Optional):</p><input type="file" id="new-scan-input" name="PacketRequest">
                         <div><button type="submit">Start Scan</button></div>
                     </div>
                 </form>

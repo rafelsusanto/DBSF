@@ -15,6 +15,8 @@
         <link rel="stylesheet" href="{% static 'css/result.css' %}">
         <link rel="stylesheet" href="{% static 'css/newscan.css' %}">
         <link rel="stylesheet" href="{% static 'css/scanlist.css' %}">
+
+        <!-- icon -->
     </head>
     <body>
         <script src="{% static 'js/base.js' %}">
@@ -30,12 +32,10 @@
                 </label>
                 
                 <div id="dropdown-content">
-                    <img src="{% static 'images/logo.png' %}" alt="" id="dropdown-logo">   
+                    <img src="{% static 'images/logo.png' %}" alt="" id="dropdown-logo" style=" width: 14vw; padding: 0 1vw;">   
                     <a href="/">Home</a>
                     <a href="/newscan">New Scan</a>
                     <a href="/scanlist">Scan List</a>
-                    <a href="#">Help</a>
-                    <a href="#">Others</a>
                     <div></div>
                 </div>
             </div>
@@ -48,7 +48,7 @@
             </div>
             
             <div>
-                <p id="help-button"><a href="#">HELP</a></p>
+                
             </div>
         </nav>
         
